@@ -209,7 +209,12 @@ For each auto-revisable finding:
 1. Read the file containing the current text
 2. Search for exact match of "Current Text" from audit report
 3. If found: replace with "Suggestion" text (in memory only, do not write yet)
-4. If not found: flag as "TEXT_NOT_FOUND" and handle as error (see Phase 5 Error Handling)
+4. If not found: 
+   - Flag as "TEXT_NOT_FOUND"
+   - Skip this revision (do not include in diff preview)
+   - Track in skipped revisions count
+   - Will be reported as text mismatch error in final summary
+   - See Phase 5 Error Handling for detailed user notification
 
 Track all revisions in memory:
 ```
@@ -221,6 +226,20 @@ Track all revisions in memory:
   "rule": "<rule reference>"
 }
 ```
+
+**File reading errors:**
+If file cannot be read (permissions, encoding, deleted):
+- Flag as "FILE_READ_ERROR"
+- Skip this revision (do not include in diff)
+- Track separately from TEXT_NOT_FOUND
+- Report to user in summary
+
+**Multiple occurrences:**
+If "Current Text" appears multiple times in the file:
+- Use the "Location" field from audit report to identify correct occurrence
+- For "Line N" location, search only line N for the text
+- Replace only the occurrence at the specified line
+- If location is ambiguous, flag for manual review
 
 ### Step 2.2: Show Unified Diff
 
@@ -275,7 +294,9 @@ Your choice?
 - Proceed to Phase 4 (Interactive Manual Workflow)
 
 **C: Selective**
-- For each file or each individual revision, ask: "Apply this revision? (Y/N)"
+- Ask user: "Review by (F)ile or by individual (R)evision?"
+- **File-level:** For each file with auto-revisions, show the file's diff and ask: "Apply all revisions to <filename>? (Y/N)"
+- **Revision-level:** For each individual revision, show the specific change and ask: "Apply this revision? (Y/N)"
 - Track approved vs rejected
 - Proceed to Phase 3 with only approved revisions
 
