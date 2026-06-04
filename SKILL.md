@@ -197,3 +197,102 @@ Ready to proceed to preview phase.
 ```
 
 ---
+
+## Phase 2: Preview Auto-Revisions
+
+Generate a diff preview of all auto-revisable changes and get user approval before applying anything.
+
+### Step 2.1: Generate In-Memory Revisions
+
+For each auto-revisable finding:
+
+1. Read the file containing the current text
+2. Search for exact match of "Current Text" from audit report
+3. If found: replace with "Suggestion" text (in memory only, do not write yet)
+4. If not found: flag as "TEXT_NOT_FOUND" and handle as error (see Phase 5 Error Handling)
+
+Track all revisions in memory:
+```
+{
+  "file": "<absolute-path>",
+  "location": "<line or section>",
+  "original": "<current text>",
+  "revised": "<suggestion text>",
+  "rule": "<rule reference>"
+}
+```
+
+### Step 2.2: Show Unified Diff
+
+For each file with auto-revisions, present a unified diff:
+
+```
+File: sample-cli-doc.md (3 auto-revisions)
+
+--- original
++++ revised
+@@ Line 5 @@
+-You can utilize it to configure
++You can use it to configure
+
+@@ Line 9 @@
+-Simply run the following command:
++Run the following command:
+
+@@ Line 15 @@
+-It'll configure everything
++It will configure everything
+```
+
+Group by file. Show all diffs before asking for approval.
+
+### Step 2.3: Request User Approval
+
+After showing all diffs:
+
+```
+Preview of Auto-Revisions
+
+Files to revise: X
+Total auto-revisions: Y
+
+Options:
+A) Approve all - Apply all auto-revisions as shown
+B) Reject all - Skip auto-revisions, go directly to manual workflow
+C) Selective - Choose which auto-revisions to apply (I'll ask per-file or per-revision)
+
+Your choice?
+```
+
+**Handle user choice:**
+
+**A: Approve all**
+- Proceed to Phase 3 with all auto-revisions approved
+
+**B: Reject all**
+- Skip Phase 3 entirely
+- Move all auto-revisable findings to manual review queue
+- Proceed to Phase 4 (Interactive Manual Workflow)
+
+**C: Selective**
+- For each file or each individual revision, ask: "Apply this revision? (Y/N)"
+- Track approved vs rejected
+- Proceed to Phase 3 with only approved revisions
+
+### Step 2.4: Confirm Approval
+
+If user approved any auto-revisions:
+
+```
+Approved auto-revisions: X
+Proceeding to Phase 3 (Apply Auto-Revisions)...
+```
+
+If user rejected all:
+
+```
+All auto-revisions rejected.
+Proceeding to Phase 4 (Interactive Manual Workflow)...
+```
+
+---
