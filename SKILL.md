@@ -42,13 +42,37 @@ Read the audit report and extract findings. Each finding should capture:
 - **Rule Reference** (style guide rule, from "Rule Reference" column)
 
 **Audit Report Format:**
+
+The audit report has this structure:
+- Header section (skip): Summary tables, Top 5 Issues
+- Main content starts at first `### Document N: filename.md` header
+- Each document section contains dimension subsections: `#### Dimension Name`
+- Each dimension has a findings table with columns: Issue | Location | Severity | Current Text | Suggestion | Rule Reference
+
+Example structure:
 ```
-### Document N: filename.md
+### Document 1: sample-cli-doc.md
+
+#### Tone/Voice Consistency
 
 | Issue | Location | Severity | Current Text | Suggestion | Rule Reference |
+|-------|----------|----------|--------------|-----------|-----------------|
+| Title uses "How to" pattern | Line 1 | CRITICAL | "# How to Use..." | "# Use..." | Formatting #3 |
+
+#### Clarity/Readability
+
+| Issue | Location | Severity | Current Text | Suggestion | Rule Reference |
+...
 ```
 
-Parse all documents and all findings from the report.
+**Parsing instructions:**
+- Skip the report header (everything before first `### Document`)
+- For each `### Document N: filename.md` section:
+  - Extract filename (basename only, e.g., "sample-cli-doc.md")
+  - For each `#### Dimension` subsection within the document:
+    - Parse the findings table
+    - Extract: Issue description, Location, Severity, Current Text, Suggestion, Rule Reference
+- Continue until `---` separator or end of file
 
 ### Step 1.3: Resolve File Paths
 
@@ -56,6 +80,12 @@ For each finding:
 - Combine doc root + relative file path: `<doc-root>/<filename>`
 - Validate resolved path exists with `Bash` command `test -f <path> && echo "EXISTS" || echo "MISSING"`
 - If file is missing, flag this finding as "FILE_MISSING" and track for error reporting later
+
+**File path format:**
+- Document headers show basename only: "### Document 1: sample-cli-doc.md"
+- Extract the filename after the colon and space
+- Combine as: `<doc-root>/<filename>` (e.g., `/Users/user/docs/sample-cli-doc.md`)
+- If filename includes subdirectory (e.g., "cli/commands.md"), preserve it: `<doc-root>/cli/commands.md`
 
 ### Step 1.4: Categorize Findings
 
@@ -83,6 +113,18 @@ If the suggestion involves:
 
 **Mark as manual review.**
 
+**Location-Based Categorization:**
+
+The "Location" column affects whether a finding can be auto-revised:
+- "Line N" (single line) - Can be auto-revisable if suggestion is simple replacement
+- "Lines N-M" (range) - Requires manual review (multi-line changes)
+- "Entire section", section names, no specific line - Requires manual review
+
+**Auto-revisable findings must have:**
+- Single line location ("Line N")
+- Exact current text match in the file
+- Simple replacement suggestion (word/phrase substitution)
+
 **Ambiguity Handling:**
 If you cannot confidently categorize a finding using the above rules, flag it as "AMBIGUOUS" and ask the user:
 
@@ -103,11 +145,16 @@ Do not guess. Wait for user response.
 Check if the documentation root is under version control:
 
 ```bash
-cd <doc-root> && git rev-parse --is-inside-work-tree
+cd <doc-root> && git rev-parse --is-inside-work-tree 2>/dev/null
 ```
 
 If output is "true": **Git workflow available**
 If command fails: **Non-git workflow** (will ask user for output strategy in Phase 3)
+
+**Note:** The doc-root may be a subdirectory of the git repository. To find the repository root if needed:
+```bash
+cd <doc-root> && git rev-parse --show-toplevel
+```
 
 Check for uncommitted changes (if git):
 
