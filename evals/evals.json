@@ -1,0 +1,68 @@
+{
+  "skill_name": "doc-accuracy-audit",
+  "evals": [
+    {
+      "id": 1,
+      "type": "cli",
+      "prompt": "I need to audit the documentation for the Docker CLI against the actual source code. We're using docker/cli on GitHub and the official docs are at https://docs.docker.com/engine/reference/commandline/. We don't have downstream docs, but I want to make sure the `docker run` command and its flags are properly documented.",
+      "expected_output": "The skill should identify this as a CLI tool audit. Should ask for context (tool name, repo, upstream/downstream docs), offer to scope the audit (full vs. focused), then execute a focused audit on the `docker run` command and its major flags. The output should be a Markdown report saved to the working directory with discrepancies between docs and code.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "type": "cli",
+      "prompt": "Can you check if the kubectl documentation matches the actual kubectl implementation? We're looking at https://github.com/kubernetes/kubernetes for the source and https://kubernetes.io/docs/reference/kubectl/kubectl/ for the official docs. We also have internal enterprise docs at https://internal.example.com/kubectl-guide that claim kubectl defaults to 'secure mode' -- I'm concerned that might contradict the open-source version.",
+      "expected_output": "The skill should identify this as a CLI tool audit. Should gather context (including the downstream URL), offer full audit scope, then perform all 4 tasks including Task 3 (upstream vs downstream alignment). The report should flag if the enterprise docs' 'secure mode' claim contradicts the actual code, with clear evidence.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "type": "cli",
+      "prompt": "I have a custom CLI tool at /Users/me/my-cli-repo and the docs are in /Users/me/my-cli-repo/docs/README.md. The docs mention a `--config` flag that I'm not sure actually exists in the code. Can you quickly check if that flag is real and if there are other flags documented that don't match the implementation? Just focus on flags, not the full audit.",
+      "expected_output": "The skill should identify this as a CLI tool audit. Should ask for clarification (tool name, confirm repo path), offer to scope to a flag-only audit (Task 2), then perform that focused audit. The report should clearly state whether `--config` exists, what flags are documented vs real, and save to the working directory.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "type": "terraform",
+      "prompt": "I need to audit our internal Terraform provider called 'terraform-provider-acme' against its documentation. The provider source is at /Users/me/providers/terraform-provider-acme (Go code) and the docs are in /Users/me/providers/terraform-provider-acme/docs/. We've had issues where the docs mention a resource 'acme_database' with an attribute 'backup_enabled' that I'm not sure actually exists in the schema. Can you verify if the resources and attributes documented actually match the schema implementation? Just focus on resources and their attributes, not a full audit.",
+      "expected_output": "The skill should identify this as a Terraform provider audit. Should gather context (provider name, source path, doc path), offer to scope the audit (full vs focused), then perform a focused resource and attribute audit. Should check schema definitions in Go code and compare to docs. Report should clearly state if acme_database and backup_enabled exist, what other mismatches are found, and save to a markdown file.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "type": "terraform",
+      "prompt": "Can you check if the AWS provider documentation on the Terraform Registry matches the actual provider implementation? We're looking at the aws_instance resource specifically. Our internal enterprise docs at https://internal.example.com/terraform-aws claim that aws_instance has a 'security_mode' attribute that defaults to 'strict' for compliance, but I don't see this in the official registry docs at https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance. I'm concerned our enterprise docs might be documenting something that doesn't exist in the actual provider. Source repo is https://github.com/hashicorp/terraform-provider-aws.",
+      "expected_output": "The skill should identify this as a Terraform provider audit. Should gather context including the downstream URL, offer full audit scope, then perform upstream vs downstream alignment check. Should verify if 'security_mode' attribute actually exists in the provider schema (via terraform providers schema or Go code inspection). Report should flag if the enterprise docs' claim contradicts the actual implementation, with clear evidence from schema.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "type": "terraform",
+      "prompt": "I have a custom provider at /Users/me/terraform-provider-custom with docs in the docs/ subdirectory. The docs show an example HCL configuration for the 'custom_server' resource with a 'config' block that has nested attributes like 'timeout' and 'retries'. I want to verify that this example actually works - that the schema supports this nested structure and these specific attributes with the types shown in the example. Can you trace through the example and confirm the schema matches? Just focus on validating this one example, not a full audit.",
+      "expected_output": "The skill should identify this as a Terraform provider audit. Should ask for clarification (provider name if not obvious, confirm paths), offer to scope to example validation only, then trace the HCL example through the schema. Should verify the nested block structure, attribute names, types, and constraints match between the example and the actual schema definition. Report should clearly state if the example is valid or identify specific mismatches.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "type": "api",
+      "prompt": "I need to audit our API documentation against the OpenAPI spec. The spec is at /Users/me/api/openapi.yaml (OpenAPI 3.0) and the docs are published at https://docs.example.com/api/v2/. I want to make sure all documented endpoints actually exist in the spec and that the parameter descriptions are accurate. Full audit please.",
+      "expected_output": "The skill should identify this as an API documentation audit. Should gather context (API name, spec file path, spec format, docs URL), confirm no downstream docs, then perform all 4 tasks: endpoint inventory (ghost/hidden endpoints), parameter and schema audit, skip Task 3 (no downstream), and example validation. Report should use 'Source of Truth' label referencing the OpenAPI spec. No source code reading should occur -- the spec is the sole source of truth.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "type": "api",
+      "prompt": "Our API docs at https://docs.example.com/payments/ describe a POST /payments endpoint with a 'currency' field that accepts 'USD', 'EUR', 'GBP', and 'JPY'. But I think the actual OpenAPI spec at /Users/me/api/payments-spec.json only allows 'USD' and 'EUR'. Can you just check that one endpoint's parameters? It's a Swagger 2.0 spec.",
+      "expected_output": "The skill should identify this as an API documentation audit with Swagger 2.0 format. Should scope to a focused parameter audit (Task 2) on the POST /payments endpoint only. Should parse the Swagger 2.0 spec (noting structural differences from OpenAPI 3.x), extract the 'currency' enum values, and compare against the documented values. Report should clearly state the mismatch with specific values from each source.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "type": "api",
+      "prompt": "We have an OpenAPI 3.1 spec at /Users/me/api/spec.yaml and two sets of docs: the public docs at https://api.example.com/docs and internal enterprise docs at https://internal.example.com/api-guide. The enterprise docs claim there's a rate limiting header 'X-Custom-RateLimit' that isn't in the public docs. Can you check if the spec supports this and if the two doc sets are consistent?",
+      "expected_output": "The skill should identify this as an API documentation audit with downstream docs. Should perform Task 3 (multi-source alignment) comparing public vs enterprise docs, and verify both against the spec. Should check if 'X-Custom-RateLimit' appears in the spec's response headers or security schemes. Report should flag any contradictions between the three sources without trying to reconcile them.",
+      "files": []
+    }
+  ]
+}
