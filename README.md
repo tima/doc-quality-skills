@@ -1,82 +1,150 @@
-# Doc Quality Audit Skill
+# Documentation Quality Skills
 
-Audit technical documentation for tone, style, clarity, and flow with embedded baseline style guide.
+A family of three complementary Claude Code skills for comprehensive documentation auditing and improvement.
 
-## Features
+## The Skills
 
-- 10 quality dimensions (7 core, 3 comprehensive)
-- Embedded baseline style guide (IBM, PatternFly, Red Hat)
-- Honest, direct constructive criticism
-- Evidence-based findings with severity classification
-- Interactive report delivery (summary + optional detailed report)
-- Subagent-based parallel processing for large doc sets (50+ files)
-- Context-aware doc type detection (CLI, Terraform, API, tutorials)
+### doc-accuracy-audit
+Audits documentation accuracy against a source of truth: CLI source code, Terraform provider schemas, or OpenAPI specifications. Finds ghost items (documented but don't exist), hidden items (exist but not documented), and detail mismatches.
+
+**Supports:**
+- CLI Tools (commands, flags, arguments, defaults)
+- Terraform Providers (resources, data sources, attributes)
+- API Documentation (OpenAPI/Swagger specs)
+
+### doc-quality-audit
+Audits documentation for intrinsic quality: tone, style, clarity, plain language compliance, formatting. Evaluates 10 quality dimensions using an embedded baseline style guide (IBM, PatternFly, Red Hat standards).
+
+**Dimensions:**
+- Tone/Voice Consistency
+- Clarity/Readability
+- Structure/Flow
+- Consistency
+- Completeness
+- Audience Appropriateness
+- Example Quality
+- Accessibility (optional)
+- SEO/Discoverability (optional)
+- Visual Formatting (optional)
+
+### doc-quality-revise
+Applies corrections from audit reports using a semi-automated workflow: auto-revises simple issues (word replacements, contractions, formatting), guides interactive manual review for complex changes (rewrites, missing content, structural changes).
+
+**Features:**
+- Categorizes revisions by rule type (auto-revisable vs manual review)
+- Preview diffs before applying changes
+- Git branch workflow with separate commits per revision
+- Non-git output strategies (separate directory or side-by-side files)
+- Interactive A/B/C/D options for each manual revision
+
+---
+
+## The Pipeline
+
+The three skills form a complete documentation improvement workflow:
+
+1. **Verify accuracy** → `/doc-accuracy-audit` → `accuracy-audit-report.md`
+   - Compare docs against source code, schema, or spec
+   - Find ghost/hidden items and detail mismatches
+   
+2. **Audit for quality** → `/doc-quality-audit` → `quality-audit-report.md`
+   - Evaluate tone, style, clarity, formatting
+   - Check plain language compliance
+   
+3. **Apply fixes** → `/doc-quality-revise` (reads audit reports) → revised docs
+   - Auto-revise simple issues
+   - Guide interactive manual review for complex changes
+
+---
 
 ## Installation
 
-Copy `doc-quality-audit.md` to your Claude Code skills directory:
+See [INSTALL.md](INSTALL.md) for detailed instructions.
+
+**Quick start (individual skills):**
 
 ```bash
-# For user-wide installation
-cp doc-quality-audit.md ~/.claude/skills/
-
-# Or for project-specific installation
-cp doc-quality-audit.md .claude/skills/
+ln -sf ~/projects/doc-quality-skills/doc-accuracy-audit ~/.claude/skills/doc-accuracy-audit
+ln -sf ~/projects/doc-quality-skills/doc-quality-audit ~/.claude/skills/doc-quality-audit
+ln -sf ~/projects/doc-quality-skills/doc-quality-revise ~/.claude/skills/doc-quality-revise
 ```
 
-Test documentation files are located in `test-docs/` within this repository.
+Then reload Claude Code or restart your session.
+
+---
 
 ## Usage
 
+Invoke from Claude Code:
+
 ```
+/doc-accuracy-audit
 /doc-quality-audit
+/doc-quality-revise
 ```
 
-Skill will prompt for:
-1. Documentation sources (paths or URLs)
-2. Quality dimensions (core or comprehensive)
-3. Optional additional style guides
+Or describe your intent naturally -- each skill triggers on relevant phrases like:
+- "audit the docs for my CLI tool"
+- "check if the provider docs match the schema"
+- "verify our API docs match the OpenAPI spec"
+- "audit documentation for tone and clarity"
+- "apply fixes from the audit report"
 
-## Quality Dimensions
+---
 
-**Core (default):**
-1. Tone/Voice Consistency
-2. Clarity/Readability (plain language focus)
-3. Structure/Flow
-4. Consistency
-5. Completeness
-6. Audience Appropriateness
-7. Example Quality
+## Test Documentation
 
-**Comprehensive (+3 more):**
-8. Accessibility
-9. SEO/Discoverability
-10. Visual Formatting
+Shared test docs in `test-docs/`:
+- `sample-cli-doc.md` - CLI documentation with intentional quality and accuracy issues
+- `sample-terraform-doc.md` - Terraform provider documentation with issues
 
-## Output
+These files are used by both doc-quality-audit and doc-quality-revise for testing and demonstration.
 
-**Screen summary:** Shows immediately with top 5 issues and findings count
+---
 
-**Full report (optional):** Markdown file with all findings organized by dimension, including:
-- Severity (Critical/Moderate/Minor)
-- Location (file:section)
-- Current text quote
-- Suggested fix
-- Style guide reference
+## Project Structure
 
-## Testing
-
-Test with sample docs (from this repository):
 ```
-/doc-quality-audit
+doc-quality-skills/
+  README.md                    # This file
+  INSTALL.md                   # Installation instructions
+  test-docs/                   # Shared test documentation
+  doc-accuracy-audit/          # Accuracy audit skill
+    SKILL.md
+    README.md
+    evals/evals.json
+  doc-quality-audit/           # Quality audit skill
+    SKILL.md
+    README.md
+    docs/                      # Design specs and plans
+  doc-quality-revise/          # Revision application skill
+    SKILL.md
+    README.md
+    TEST_RESULTS.md
 ```
-Provide: `test-docs/sample-cli-doc.md` or `test-docs/sample-terraform-doc.md`
 
-Both test files contain intentional quality issues for validation.
+---
 
-## Complementary Skills
+## History
 
-- `cli-doc-audit` - Verifies CLI docs match source code
-- `terraform-provider-audit` - Verifies Terraform docs match provider schema
+This family repository consolidates three previously standalone projects:
+- `doc-quality-audit-skill` (3 commits)
+- `doc-accuracy-audit-skill` (1 commit)
+- `doc-quality-revise-skill` (13 commits)
 
-This skill focuses on quality/style, not technical accuracy.
+All git history has been preserved via subtree merge. Original standalone projects remain available but are no longer actively maintained.
+
+---
+
+## Related Skills
+
+These skills complement each other but are independent. You can use any combination:
+- Use doc-accuracy-audit alone to verify docs match source code
+- Use doc-quality-audit alone for style/tone reviews
+- Use doc-quality-revise alone if you have existing audit reports
+
+---
+
+## License
+
+See individual skill directories for license information.
