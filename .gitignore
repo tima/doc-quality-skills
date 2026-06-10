@@ -1,0 +1,5 @@
+.DS_Store
+*.audit.md
+*.audit-report.md
+*.sw*
+.claude/
