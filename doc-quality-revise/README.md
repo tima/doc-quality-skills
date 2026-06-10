@@ -1,3 +1,5 @@
+> Part of the [doc-quality-skills](..//) family. See the [family README](../README.md) for the complete pipeline.
+
 # doc-quality-revise
 
 Claude Code skill for applying corrections from doc-quality-audit reports using semi-automated workflow.

@@ -1,3 +1,5 @@
+> Part of the [doc-quality-skills](..//) family. See the [family README](../README.md) for the complete pipeline.
+
 # Doc Quality Audit Skill
 
 Audit technical documentation for tone, style, clarity, and flow with embedded baseline style guide.
