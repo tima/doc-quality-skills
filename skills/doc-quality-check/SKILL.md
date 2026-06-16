@@ -49,6 +49,7 @@ Optional flags:
 - `--accuracy-only` - Run only accuracy audit
 - `--quality-only` - Run only quality audit
 - `--parallel` - Run accuracy + quality audits concurrently (faster)
+- `--dry-run` - Preview mode, no files modified (passed to all skills)
 
 **Flag validation:** Cannot combine `--skip-accuracy` + `--skip-quality` (nothing to audit)
 
@@ -84,6 +85,10 @@ Single phase:
 - `audit_only` - Boolean, `--audit-only` present
 - `accuracy_only` - Boolean, `--accuracy-only` present
 - `quality_only` - Boolean, `--quality-only` present
+- `parallel` - Boolean, `--parallel` present
+- `dry_run` - Boolean, `--dry-run` present
+
+**If `dry_run`:** Show "DRY RUN MODE - no files will be modified" at start
 
 **Validate flags:**
 

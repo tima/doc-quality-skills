@@ -162,20 +162,25 @@ Follow the subsection that matches the identified project type.
 #### CLI Tools
 
 **Task 1 -- Command Tree Comparison:**
+Show progress: "Auditing commands... [Task 1/4]"
 Read source code for command registration patterns (Cobra, argparse, Click, or framework-specific). List all registered commands and subcommands. Compare against the documented command list. Flag ghost commands (documented but not in code) and hidden commands (in code but not documented).
 
 **Task 2 -- Flag and Argument Audit:**
+Show progress: "Auditing flags... [Task 2/4]"
 For each command in scope, extract flags and arguments from source code: names, aliases, types, default values, constraints, required/optional status. Compare against documented flags. Flag naming mismatches, missing defaults, incorrect types, and undocumented constraints.
 
 **Task 3 -- Upstream vs Downstream Alignment:**
+Show progress: "Checking alignment... [Task 3/4]"
 Compare claims between upstream (official/community) docs and downstream (enterprise/product) docs. Flag any downstream additions, removals, or contradictions not supported by the code. If no downstream docs, skip this task and note it.
 
 **Task 4 -- Semantic Logic Check:**
+Show progress: "Verifying behavior... [Task 4/4]"
 Pick the most representative command (or let the user choose). Trace its execution path in the source code. Verify that the documented behavior (input handling, output format, error behavior, side effects) matches the implementation.
 
 #### Terraform Providers
 
 **Task 1 -- Resource and Data Source Registry Comparison:**
+Show progress: "Auditing resources... [Task 1/4]"
 Identify all resources and data sources registered in the provider code. Compare against the documented resource list. Flag ghost resources (documented but not registered) and hidden resources (registered but not documented).
 
 **Task 2 -- Schema Attribute Audit:**
@@ -267,10 +272,12 @@ If you cannot access documentation or the source of truth:
 
 - If `--output` flag is provided, use that filename exactly
 - Otherwise, use default pattern: `{project-name}-docs-audit.md`
-- **Before saving:** Check if a file with that name already exists. If it does, ask the user whether to:
-  - Overwrite it
-  - Create a new version (e.g., `{project-name}-docs-audit-2.md`)
-  - Use a different filename
+- **Before saving:** 
+  - If `--dry-run` flag: Display report to screen, show "DRY RUN: Would save to {filename}", skip file write. END HERE.
+  - Otherwise: Check if a file with that name already exists. If it does, ask the user whether to:
+    - Overwrite it
+    - Create a new version (e.g., `{project-name}-docs-audit-2.md`)
+    - Use a different filename
 
 ### Report structure
 

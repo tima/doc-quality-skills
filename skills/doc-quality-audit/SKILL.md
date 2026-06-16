@@ -283,6 +283,11 @@ Immediately after audit completes, show:
 
 Ask: "Save detailed report to file?"
 
+**If `--dry-run` flag:**
+- Show full report to screen
+- Show "DRY RUN: Would save to {filename}"
+- END HERE (skip file write)
+
 **If yes:**
 - Generate full markdown report (format below)
 - Save to current working directory

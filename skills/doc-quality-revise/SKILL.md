@@ -241,8 +241,12 @@ Findings breakdown:
 - Ambiguous: A findings (need classification)
 - File missing: B findings (will skip)
 
-Ready to proceed to preview phase.
+Proceed with preview? (y/n)
 ```
+
+If user says **no**: "Aborted. No changes made." Stop here.
+
+If user says **yes**: Continue to Phase 2.
 
 ---
 
@@ -372,6 +376,8 @@ Proceeding to Phase 4 (Interactive Manual Workflow)...
 ## Phase 3: Apply Auto-Revisions
 
 **Skip check:** If `--interactive-only` flag: Skip this phase entirely, jump to Phase 4
+
+**Dry-run check:** If `--dry-run` flag: Show "DRY RUN: Would apply X auto-revisions to Y files", skip all writes, jump to Phase 4
 
 Apply approved auto-revisions using git branch workflow (if available) or chosen output strategy (if not).
 
@@ -518,6 +524,8 @@ Proceed to Phase 4 if there are manual review findings. Otherwise, show final su
 ---
 
 ## Phase 4: Interactive Manual Revision Workflow
+
+**Dry-run check:** If `--dry-run` flag: Show "DRY RUN: Would prompt for M manual reviews", END HERE
 
 Walk through each manual review finding one-by-one, presenting context and options, and applying user-directed revisions.
 
