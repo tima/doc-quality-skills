@@ -1,8 +1,8 @@
-# doc-pipeline Orchestration Skill Design
+# doc-quality-check Orchestration Skill Design
 
 ## Overview
 
-A thin orchestrator skill that runs the complete documentation quality pipeline by invoking the three existing skills in sequence. Lives in the doc-quality-skills family repository as a fourth skill.
+A thin orchestrator skill that runs the complete documentation quality check pipeline by invoking the three existing skills in sequence. Lives in the doc-quality-skills family repository as a fourth skill.
 
 ## Goals
 
@@ -14,7 +14,7 @@ A thin orchestrator skill that runs the complete documentation quality pipeline 
 
 ## Architecture
 
-**Location:** `doc-quality-skills/doc-pipeline/SKILL.md`
+**Location:** `doc-quality-skills/doc-quality-check/SKILL.md`
 
 **Type:** Orchestrator skill - delegates to other skills via Skill tool invocations
 
@@ -26,7 +26,7 @@ A thin orchestrator skill that runs the complete documentation quality pipeline 
 ## Invocation Flow
 
 ```
-User: /doc-pipeline path/to/docs [flags]
+User: /doc-quality-check path/to/docs [flags]
   ↓
 Parse arguments and flags
   ↓
@@ -90,12 +90,12 @@ doc-quality-revise already handles finding these, no extra work needed.
 
 **Invocation:**
 ```
-/doc-pipeline docs/api/
+/doc-quality-check docs/api/
 ```
 
 **Output during execution:**
 ```
-Running documentation quality pipeline on docs/api/
+Running documentation quality check on docs/api/
 
 Phase 1/3: Accuracy audit
 [doc-accuracy-audit skill executes]
@@ -114,9 +114,9 @@ Pipeline complete. All phases finished successfully.
 
 **With flags:**
 ```
-/doc-pipeline docs/api/ --skip-accuracy --audit-only
+/doc-quality-check docs/api/ --skip-accuracy --audit-only
 
-Running documentation quality pipeline on docs/api/
+Running documentation quality check on docs/api/
 
 Skipping Phase 1: Accuracy audit (--skip-accuracy)
 
@@ -134,10 +134,10 @@ Pipeline complete.
 After implementation:
 
 ```bash
-ln -sf ~/projects/doc-quality-skills/doc-pipeline ~/.claude/skills/doc-pipeline
+ln -sf ~/projects/doc-quality-skills/doc-quality-check ~/.claude/skills/doc-quality-check
 ```
 
-Becomes available as `/doc-pipeline`.
+Becomes available as `/doc-quality-check`.
 
 ## Testing
 
