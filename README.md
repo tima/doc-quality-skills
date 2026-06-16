@@ -73,9 +73,10 @@ See [INSTALL.md](INSTALL.md) for detailed instructions.
 **Quick start (individual skills):**
 
 ```bash
-ln -sf ~/projects/doc-quality-skills/doc-accuracy-audit ~/.claude/skills/doc-accuracy-audit
-ln -sf ~/projects/doc-quality-skills/doc-quality-audit ~/.claude/skills/doc-quality-audit
-ln -sf ~/projects/doc-quality-skills/doc-quality-revise ~/.claude/skills/doc-quality-revise
+ln -sf ~/projects/doc-quality-skills/skills/doc-accuracy-audit ~/.claude/skills/doc-accuracy-audit
+ln -sf ~/projects/doc-quality-skills/skills/doc-quality-audit ~/.claude/skills/doc-quality-audit
+ln -sf ~/projects/doc-quality-skills/skills/doc-quality-revise ~/.claude/skills/doc-quality-revise
+ln -sf ~/projects/doc-quality-skills/skills/doc-quality-check ~/.claude/skills/doc-quality-check
 ```
 
 Then reload Claude Code or restart your session.
@@ -117,19 +118,24 @@ These files are used by both doc-quality-audit and doc-quality-revise for testin
 doc-quality-skills/
   README.md                    # This file
   INSTALL.md                   # Installation instructions
+  docs/                        # Design specs and implementation plans
   test-docs/                   # Shared test documentation
-  doc-accuracy-audit/          # Accuracy audit skill
-    SKILL.md
-    README.md
-    evals/evals.json
-  doc-quality-audit/           # Quality audit skill
-    SKILL.md
-    README.md
-    docs/                      # Design specs and plans
-  doc-quality-revise/          # Revision application skill
-    SKILL.md
-    README.md
-    TEST_RESULTS.md
+  skills/                      # Individual skills
+    doc-accuracy-audit/        # Accuracy audit skill
+      SKILL.md
+      README.md
+      evals/evals.json
+    doc-quality-audit/         # Quality audit skill
+      SKILL.md
+      README.md
+    doc-quality-revise/        # Revision application skill
+      SKILL.md
+      README.md
+      TEST_RESULTS.md
+    doc-quality-check/         # Pipeline orchestrator
+      SKILL.md
+      README.md
+      TEST_RESULTS.md
 ```
 
 ---

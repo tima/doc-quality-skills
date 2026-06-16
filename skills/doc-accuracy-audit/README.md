@@ -1,6 +1,6 @@
 # doc-accuracy-audit
 
-> Part of the [doc-quality-skills](../) family. See the [family README](../README.md) for the complete pipeline.
+> Part of the [doc-quality-skills](../../) family. See the [family README](../README.md) for the complete pipeline.
 
 A Claude Code skill that audits documentation accuracy against a source of truth. Finds ghost items (documented but don't exist), hidden items (exist but not documented), and detail mismatches across three project types.
 
@@ -17,7 +17,7 @@ See [../INSTALL.md](../INSTALL.md) for detailed instructions.
 **Quick install:**
 
 ```bash
-ln -sf ~/projects/doc-quality-skills/doc-accuracy-audit ~/.claude/skills/doc-accuracy-audit
+ln -sf ~/projects/doc-quality-skills/skills/doc-accuracy-audit ~/.claude/skills/doc-accuracy-audit
 ```
 
 ## Usage

@@ -1,6 +1,6 @@
 # doc-quality-check
 
-> Part of the [doc-quality-skills](../) family. See the [family README](../README.md) for the complete pipeline.
+> Part of the [doc-quality-skills](../../) family. See the [family README](../README.md) for the complete pipeline.
 
 Pipeline orchestrator that runs the complete documentation quality workflow: accuracy audit → quality audit → apply revisions.
 
@@ -20,7 +20,7 @@ See [../INSTALL.md](../INSTALL.md) for detailed instructions.
 **Quick install:**
 
 ```bash
-ln -sf ~/projects/doc-quality-skills/doc-quality-check ~/.claude/skills/doc-quality-check
+ln -sf ~/projects/doc-quality-skills/skills/doc-quality-check ~/.claude/skills/doc-quality-check
 ```
 
 ## Usage

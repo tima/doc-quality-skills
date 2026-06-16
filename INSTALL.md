@@ -7,10 +7,10 @@ Three installation options for the documentation quality skills family.
 Install skills as top-level commands while keeping them organized in the family repository.
 
 ```bash
-ln -sf ~/projects/doc-quality-skills/doc-accuracy-audit ~/.claude/skills/doc-accuracy-audit
-ln -sf ~/projects/doc-quality-skills/doc-quality-audit ~/.claude/skills/doc-quality-audit
-ln -sf ~/projects/doc-quality-skills/doc-quality-revise ~/.claude/skills/doc-quality-revise
-ln -sf ~/projects/doc-quality-skills/doc-quality-check ~/.claude/skills/doc-quality-check
+ln -sf ~/projects/doc-quality-skills/skills/doc-accuracy-audit ~/.claude/skills/doc-accuracy-audit
+ln -sf ~/projects/doc-quality-skills/skills/doc-quality-audit ~/.claude/skills/doc-quality-audit
+ln -sf ~/projects/doc-quality-skills/skills/doc-quality-revise ~/.claude/skills/doc-quality-revise
+ln -sf ~/projects/doc-quality-skills/skills/doc-quality-check ~/.claude/skills/doc-quality-check
 ```
 
 **Skills become available as:**
@@ -60,10 +60,10 @@ Copy skills to a project's `.claude/skills/` directory for project-specific usag
 mkdir -p .claude/skills
 
 # Copy individual skills
-cp -r ~/projects/doc-quality-skills/doc-accuracy-audit .claude/skills/
-cp -r ~/projects/doc-quality-skills/doc-quality-audit .claude/skills/
-cp -r ~/projects/doc-quality-skills/doc-quality-revise .claude/skills/
-cp -r ~/projects/doc-quality-skills/doc-quality-check .claude/skills/
+cp -r ~/projects/doc-quality-skills/skills/doc-accuracy-audit .claude/skills/
+cp -r ~/projects/doc-quality-skills/skills/doc-quality-audit .claude/skills/
+cp -r ~/projects/doc-quality-skills/skills/doc-quality-revise .claude/skills/
+cp -r ~/projects/doc-quality-skills/skills/doc-quality-check .claude/skills/
 ```
 
 **Skills become available as:**
