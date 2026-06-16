@@ -380,7 +380,7 @@ Ask: "Save detailed report to file?"
 - Generate full markdown report (format below)
 - Save to current working directory
 - Filename: Use `--output` value if provided, otherwise `{project-name}-quality-audit.md`
-- Before saving: check if file exists, ask to overwrite/create new version/use different name
+- Check if file exists before saving (same collision handling as doc-accuracy-audit)
 
 **If no:**
 - User can work from summary
