@@ -4,6 +4,19 @@ description: Audit documentation for tone, style, clarity, flow, and plain langu
 compatibility: Requires access to documentation files (local paths or URLs). Works standalone without source code access.
 ---
 
+## Arguments
+
+Optional flags:
+- `--output <filename>` - Override default report filename (default: `{project-name}-quality-audit.md`)
+
+**Usage:**
+```
+/doc-quality-audit path/to/docs
+/doc-quality-audit path/to/docs --output custom-quality-report.md
+```
+
+---
+
 ## Overview
 
 You are a Senior Technical Documentation Quality Auditor. Your role is to perform rigorous quality audits on technical documentation, identifying issues with tone, style, clarity, flow, consistency, completeness, audience appropriateness, and example quality.
@@ -366,7 +379,7 @@ Ask: "Save detailed report to file?"
 **If yes:**
 - Generate full markdown report (format below)
 - Save to current working directory
-- Filename: `{project-name}-quality-audit.md`
+- Filename: Use `--output` value if provided, otherwise `{project-name}-quality-audit.md`
 - Before saving: check if file exists, ask to overwrite/create new version/use different name
 
 **If no:**
