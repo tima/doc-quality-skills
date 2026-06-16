@@ -36,11 +36,15 @@ This skill supports three project types:
 
 Optional flags:
 - `--output <filename>` - Override default report filename (default: `{project-name}-docs-audit.md`)
+- `--dry-run` - Display report without saving (preview mode)
+- `--since <git-ref>` - Audit only files changed since git ref (incremental mode)
 
 **Usage:**
 ```
 /doc-accuracy-audit path/to/docs
 /doc-accuracy-audit path/to/docs --output custom-report.md
+/doc-accuracy-audit path/to/docs --dry-run
+/doc-accuracy-audit path/to/docs --since HEAD~3
 ```
 
 ---
