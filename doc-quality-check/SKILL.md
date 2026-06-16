@@ -333,7 +333,7 @@ Skipping Phase 1: Accuracy audit (--skip-accuracy)
 Phase 2/2: Quality audit
 COMPLETE Quality audit complete -> terraform-provider-quality-audit-20260616-1435.md
 
-Phase 3/2: Apply revisions
+Phase 2/2: Apply revisions
 COMPLETE Revisions complete
 
 Pipeline complete.
@@ -472,7 +472,7 @@ If user aborts during Phase 3 (revision phase):
 
 1. Preserve audit reports (Phases 1 and 2 output)
 2. Document partial completion
-3. User can re-run with `--audit-only` skipped by pointing directly to saved reports
+3. User can apply revisions later by invoking doc-quality-revise directly with saved reports
 
 Output:
 ```
