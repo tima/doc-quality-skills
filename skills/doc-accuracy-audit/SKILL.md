@@ -1,7 +1,21 @@
 ---
 name: doc-accuracy-audit
-description: Audit documentation accuracy against a source of truth (source code, provider schema, or OpenAPI spec). Finds ghost items (documented but don't exist), hidden items (exist but not documented), and detail mismatches. Supports CLI tools, Terraform providers, and API documentation. Use when verifying docs match implementation, auditing for accuracy, checking if documented commands/resources/endpoints are real, or comparing upstream vs downstream documentation.
-compatibility: Requires access to the source of truth (code repository, provider schema, or OpenAPI spec file) and documentation (URLs or local paths).
+description: Cross-reference docs against source of truth - finds ghost items, hidden items, detail mismatches
+triggers:
+  - audit docs against source
+  - verify docs match code
+  - check for ghost commands
+  - find undocumented resources
+  - compare docs to schema
+compatibility: Requires source access (code/schema/spec) and docs (local/URLs)
+examples:
+  - /doc-accuracy-audit docs/cli/
+  - /doc-accuracy-audit docs/terraform/ --output provider-audit.md
+outputs:
+  - "{project}-accuracy-audit-{timestamp}.md"
+prerequisites:
+  - Source code, provider schema, or OpenAPI spec
+  - Documentation files or URLs
 ---
 
 ## Overview
@@ -122,7 +136,20 @@ Perform the requested tasks. Follow these **Strict Adherence Rules** religiously
 
 - If you encounter genuine ambiguity you can't resolve, stop and ask for clarification rather than guessing.
 
----
+### Confidence Levels
+
+Annotate all findings with confidence level based on verification method:
+
+- **High Confidence** - Direct source verification, unambiguous evidence (e.g., flag in docs not found in code after thorough grep)
+- **Medium Confidence** - Indirect evidence, minor ambiguity (e.g., default value differs between docs and code comments but code itself unclear)
+- **Low Confidence** - Uncertain, requires manual review (e.g., could not parse argument definition, documentation ambiguous)
+
+**Format:** `**FINDING TYPE (Confidence Level):** description`
+
+**Examples:**
+- `**GHOST ITEM (High Confidence):** --debug flag documented but not in source`
+- `**POSSIBLE MISMATCH (Medium Confidence):** Default value differs (docs: 5, code: 10)`
+- `**NEEDS REVIEW (Low Confidence):** Could not parse argument definition`
 
 ### Audit Execution by Project Type
 

@@ -2,10 +2,24 @@
 name: doc-quality-check
 description: Orchestrate complete documentation quality pipeline (accuracy -> quality -> revise) with timestamped reports
 triggers:
-  - "run the doc quality pipeline"
-  - "check documentation quality"
-  - "audit and fix docs"
-  - "complete doc audit"
+  - run the doc quality pipeline
+  - check documentation quality
+  - audit and fix docs
+  - complete doc audit
+compatibility: Requires all three component skills installed
+examples:
+  - /doc-quality-check docs/
+  - /doc-quality-check docs/ --skip-accuracy
+  - /doc-quality-check docs/ --audit-only
+  - /doc-quality-check docs/ --parallel
+outputs:
+  - "{project}-accuracy-audit-{timestamp}.md"
+  - "{project}-quality-audit-{timestamp}.md"
+  - Revised documentation (if not --audit-only)
+prerequisites:
+  - doc-accuracy-audit skill
+  - doc-quality-audit skill
+  - doc-quality-revise skill
 ---
 
 # doc-quality-check
@@ -34,6 +48,7 @@ Optional flags:
 - `--audit-only` - Skip revision phase (audit only)
 - `--accuracy-only` - Run only accuracy audit
 - `--quality-only` - Run only quality audit
+- `--parallel` - Run accuracy + quality audits concurrently (faster)
 
 **Flag validation:** Cannot combine `--skip-accuracy` + `--skip-quality` (nothing to audit)
 
@@ -120,9 +135,40 @@ Show user:
 Running documentation quality check on {docs_path}
 ```
 
-#### Phase 1: Accuracy Audit
+#### Parallel Mode (if `--parallel` flag present)
 
-**Skip check:** If `skip_accuracy` OR `quality_only`: Skip this phase, show "Skipping Phase 1: Accuracy audit (--skip-accuracy)" or "(--quality-only)"
+**Conditions:** `--parallel` flag AND both accuracy + quality audits enabled (not skipped)
+
+**If conditions met:**
+
+1. Announce: "Running accuracy + quality audits in parallel"
+
+2. Invoke BOTH skills concurrently (single message, two Skill tool calls):
+   ```
+   /doc-accuracy-audit {docs_path} --output {accuracy_report_file}
+   /doc-quality-audit {docs_path} --output {quality_report_file}
+   ```
+
+3. After both complete, check for both report files:
+   ```bash
+   ls -la {accuracy_report_file} {quality_report_file}
+   ```
+
+4. If both exist:
+   - Show: "COMPLETE Both audits complete"
+   - Skip to Phase 3 (or completion if `--audit-only`)
+
+5. If either missing:
+   - Error: "One or both audits failed"
+   - Offer retry or skip options
+   - Fall back to sequential mode if retrying
+
+**If conditions NOT met** (one audit skipped or no `--parallel` flag):
+- Run sequentially (Phase 1 then Phase 2)
+
+#### Phase 1: Accuracy Audit (Sequential Mode)
+
+**Skip check:** If `skip_accuracy` OR `quality_only` OR (parallel mode active): Skip this phase
 
 **Otherwise, run:**
 
@@ -151,9 +197,9 @@ Running documentation quality check on {docs_path}
    - Handle user choice (retry = re-invoke skill, skip = continue, abort = stop)
 
 
-#### Phase 2: Quality Audit
+#### Phase 2: Quality Audit (Sequential Mode)
 
-**Skip check:** If `skip_quality` OR `accuracy_only`: Skip this phase, show "Skipping Phase 2: Quality audit (--skip-quality)" or "(--accuracy-only)"
+**Skip check:** If `skip_quality` OR `accuracy_only` OR (parallel mode active): Skip this phase
 
 **Otherwise, run:**
 

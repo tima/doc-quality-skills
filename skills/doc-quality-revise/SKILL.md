@@ -1,7 +1,21 @@
 ---
 name: doc-quality-revise
-description: Apply corrections from doc-quality-audit reports using semi-automated workflow. Auto-revise simple issues (word replacements, contractions), guide interactive manual review for complex changes. Supports git branch workflow and non-git output strategies.
-compatibility: Requires audit report from doc-quality-audit skill. Works with git-controlled or standalone documentation.
+description: Apply audit corrections - auto-revise simple issues, guide interactive review for complex changes
+triggers:
+  - apply audit corrections
+  - fix documentation issues
+  - revise docs from audit
+  - implement quality fixes
+compatibility: Requires audit reports - works with/without git
+examples:
+  - /doc-quality-revise
+  - /doc-quality-revise --quality-report my-audit.md
+  - /doc-quality-revise --auto-approve
+outputs:
+  - Revised documentation files
+  - Git commits (if in git repo)
+prerequisites:
+  - Audit report from doc-quality-audit or doc-accuracy-audit
 ---
 
 ## Arguments
@@ -9,12 +23,16 @@ compatibility: Requires audit report from doc-quality-audit skill. Works with gi
 Optional flags:
 - `--accuracy-report <path>` - Path to accuracy audit report (default: auto-discover `*-accuracy-audit*.md` or `*-docs-audit*.md`)
 - `--quality-report <path>` - Path to quality audit report (default: auto-discover `*-quality-audit*.md`)
+- `--auto-approve` - Auto-accept all simple revisions without preview (batch mode)
+- `--interactive-only` - Skip auto-revisions, only interactive manual review
 
 **Usage:**
 ```
 /doc-quality-revise
 /doc-quality-revise --quality-report my-quality-audit.md
 /doc-quality-revise --accuracy-report acc-report.md --quality-report qual-report.md
+/doc-quality-revise --auto-approve
+/doc-quality-revise --interactive-only
 ```
 
 **Auto-discovery:** When flags are not provided, skill searches current directory for report files matching the patterns above.
@@ -230,6 +248,9 @@ Ready to proceed to preview phase.
 
 ## Phase 2: Preview Auto-Revisions
 
+**Batch mode:** If `--auto-approve` flag: Skip preview/confirmation steps, proceed directly to Phase 3
+
+**Otherwise:**
 Generate a diff preview of all auto-revisable changes and get user approval before applying anything.
 
 ### Step 2.1: Generate In-Memory Revisions
@@ -350,7 +371,11 @@ Proceeding to Phase 4 (Interactive Manual Workflow)...
 
 ## Phase 3: Apply Auto-Revisions
 
+**Skip check:** If `--interactive-only` flag: Skip this phase entirely, jump to Phase 4
+
 Apply approved auto-revisions using git branch workflow (if available) or chosen output strategy (if not).
+
+**Batch mode:** If `--auto-approve` flag: Skip preview/confirmation in Phase 2, proceed directly to applying all auto-revisions
 
 ### Step 3.1: Determine Output Strategy
 
