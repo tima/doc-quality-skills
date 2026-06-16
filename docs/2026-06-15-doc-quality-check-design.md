@@ -19,9 +19,9 @@ A thin orchestrator skill that runs the complete documentation quality check pip
 **Type:** Orchestrator skill - delegates to other skills via Skill tool invocations
 
 **Dependencies:**
-- doc-accuracy-audit (optional, can skip)
-- doc-quality-audit (required unless --accuracy-only)
-- doc-quality-revise (optional, can skip)
+- doc-accuracy-audit (optional, can skip) - must support --output flag for timestamped reports
+- doc-quality-audit (required unless --accuracy-only) - must support --output flag for timestamped reports
+- doc-quality-revise (optional, can skip) - must accept explicit report paths
 
 ## Invocation Flow
 
@@ -30,23 +30,27 @@ User: /doc-quality-check path/to/docs [flags]
   ↓
 Parse arguments and flags
   ↓
-Phase 1: Invoke /doc-accuracy-audit path/to/docs
+Capture timestamp (YYYYMMDD-HHMM)
   ↓
-Check for accuracy-audit-report.md
+Derive project name from path
+  ↓
+Phase 1: Invoke /doc-accuracy-audit path/to/docs --output {project}-accuracy-audit-{timestamp}.md
+  ↓
+Check for timestamped accuracy report
   - Present: Continue
   - Missing: Error recovery (ask user to retry or skip)
   ↓
-Phase 2: Invoke /doc-quality-audit path/to/docs
+Phase 2: Invoke /doc-quality-audit path/to/docs --output {project}-quality-audit-{timestamp}.md
   ↓
-Check for quality-audit-report.md
+Check for timestamped quality report
   - Present: Continue
   - Missing: Error recovery
   ↓
-Phase 3: Invoke /doc-quality-revise
-  - Auto-discovers both report files
+Phase 3: Invoke /doc-quality-revise --accuracy-report {path1} --quality-report {path2}
+  - Receives explicit report paths
   - Runs interactive workflow
   ↓
-Report completion status
+Report completion status with all generated filenames
 ```
 
 ## Supported Flags
@@ -78,13 +82,26 @@ Flag validation: `--skip-accuracy` + `--skip-quality` = error (nothing to audit)
 - Preserve completed work
 - Report what was finished vs what was skipped
 
-## Report File Discovery
+## Report File Naming
 
-Pipeline expects reports in current working directory:
-- `accuracy-audit-report.md` (from phase 1)
-- `quality-audit-report.md` (from phase 2)
+**Collision avoidance:** Pipeline appends timestamp to all report filenames to prevent overwriting results from previous runs.
 
-doc-quality-revise already handles finding these, no extra work needed.
+**Timestamp format:** `YYYYMMDD-HHMM` (e.g., `20260615-1430`)
+
+**Generated filenames:**
+- `{project-name}-accuracy-audit-{timestamp}.md`
+- `{project-name}-quality-audit-{timestamp}.md`
+
+**How it works:**
+1. Pipeline captures timestamp at start (single timestamp for entire run)
+2. Passes `--output` flag to doc-accuracy-audit and doc-quality-audit with timestamped filename
+3. Passes both report paths to doc-quality-revise
+
+**Why timestamps:**
+- Preserves audit history across multiple runs
+- Prevents double-application of revisions
+- User can compare findings over time
+- No interactive prompts about overwriting
 
 ## User Experience
 
@@ -99,11 +116,11 @@ Running documentation quality check on docs/api/
 
 Phase 1/3: Accuracy audit
 [doc-accuracy-audit skill executes]
-✓ Accuracy audit complete → accuracy-audit-report.md
+✓ Accuracy audit complete → api-docs-accuracy-audit-20260615-1430.md
 
 Phase 2/3: Quality audit  
 [doc-quality-audit skill executes]
-✓ Quality audit complete → quality-audit-report.md
+✓ Quality audit complete → api-docs-quality-audit-20260615-1430.md
 
 Phase 3/3: Apply revisions
 [doc-quality-revise skill executes interactively]
@@ -149,6 +166,8 @@ Becomes available as `/doc-quality-check`.
 5. Each single-phase flag (--accuracy-only, --quality-only)
 6. Error recovery when report file missing
 7. User cancellation mid-pipeline
+8. Multiple runs on same project (verify timestamped reports don't collide)
+9. Verify doc-quality-revise receives correct timestamped report paths
 
 ## Non-Goals
 
@@ -164,6 +183,18 @@ Potential additions outside initial scope:
 - Pipeline configuration file for project-specific defaults
 - Watch mode (re-run on file changes)
 - Batch mode (run on multiple doc sets)
+
+## Implementation Requirements
+
+**Prerequisite changes to existing skills:**
+
+Before implementing doc-quality-check, the two audit skills need flag support:
+
+1. **doc-accuracy-audit:** Add `--output <path>` flag to override default report filename
+2. **doc-quality-audit:** Add `--output <path>` flag to override default report filename  
+3. **doc-quality-revise:** Add `--accuracy-report <path>` and `--quality-report <path>` flags to accept explicit report paths instead of auto-discovery
+
+These changes maintain backward compatibility (flags are optional, defaults unchanged).
 
 ## Open Questions
 
