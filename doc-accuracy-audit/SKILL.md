@@ -18,6 +18,19 @@ This skill supports three project types:
 
 ---
 
+## Arguments
+
+Optional flags:
+- `--output <filename>` - Override default report filename (default: `{project-name}-docs-audit.md`)
+
+**Usage:**
+```
+/doc-accuracy-audit path/to/docs
+/doc-accuracy-audit path/to/docs --output custom-report.md
+```
+
+---
+
 ## Step 1: Gather Context
 
 Stop and ask the user for the following information. Do NOT proceed to the audit until you have this.
@@ -221,8 +234,8 @@ If you cannot access documentation or the source of truth:
 
 ### File naming
 
-- Save the report using the default file path for the working directory.
-- Use a descriptive filename pattern: `{project-name}-docs-audit.md`
+- If `--output` flag is provided, use that filename exactly
+- Otherwise, use default pattern: `{project-name}-docs-audit.md`
 - **Before saving:** Check if a file with that name already exists. If it does, ask the user whether to:
   - Overwrite it
   - Create a new version (e.g., `{project-name}-docs-audit-2.md`)
