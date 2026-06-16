@@ -10,12 +10,14 @@ Install skills as top-level commands while keeping them organized in the family 
 ln -sf ~/projects/doc-quality-skills/doc-accuracy-audit ~/.claude/skills/doc-accuracy-audit
 ln -sf ~/projects/doc-quality-skills/doc-quality-audit ~/.claude/skills/doc-quality-audit
 ln -sf ~/projects/doc-quality-skills/doc-quality-revise ~/.claude/skills/doc-quality-revise
+ln -sf ~/projects/doc-quality-skills/doc-quality-check ~/.claude/skills/doc-quality-check
 ```
 
 **Skills become available as:**
 - `/doc-accuracy-audit`
 - `/doc-quality-audit`
 - `/doc-quality-revise`
+- `/doc-quality-check`
 
 **Advantages:**
 - Backward compatible with existing usage
@@ -36,6 +38,7 @@ ln -sf ~/projects/doc-quality-skills ~/.claude/skills/doc-quality-skills
 - `/doc-quality-skills/doc-accuracy-audit`
 - `/doc-quality-skills/doc-quality-audit`
 - `/doc-quality-skills/doc-quality-revise`
+- `/doc-quality-skills/doc-quality-check`
 
 **Advantages:**
 - Single symlink installation
@@ -60,12 +63,14 @@ mkdir -p .claude/skills
 cp -r ~/projects/doc-quality-skills/doc-accuracy-audit .claude/skills/
 cp -r ~/projects/doc-quality-skills/doc-quality-audit .claude/skills/
 cp -r ~/projects/doc-quality-skills/doc-quality-revise .claude/skills/
+cp -r ~/projects/doc-quality-skills/doc-quality-check .claude/skills/
 ```
 
 **Skills become available as:**
 - `/doc-accuracy-audit` (when in this project)
 - `/doc-quality-audit` (when in this project)
 - `/doc-quality-revise` (when in this project)
+- `/doc-quality-check` (when in this project)
 
 **Advantages:**
 - Project-scoped availability
@@ -117,6 +122,7 @@ Test by invoking any skill:
 rm ~/.claude/skills/doc-accuracy-audit
 rm ~/.claude/skills/doc-quality-audit
 rm ~/.claude/skills/doc-quality-revise
+rm ~/.claude/skills/doc-quality-check
 ```
 
 **Family directory (Option 2):**
@@ -129,6 +135,7 @@ rm ~/.claude/skills/doc-quality-skills
 rm -rf .claude/skills/doc-accuracy-audit
 rm -rf .claude/skills/doc-quality-audit
 rm -rf .claude/skills/doc-quality-revise
+rm -rf .claude/skills/doc-quality-check
 ```
 
 ---

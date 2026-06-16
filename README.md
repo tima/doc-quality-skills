@@ -37,6 +37,15 @@ Applies corrections from audit reports using a semi-automated workflow: auto-rev
 - Non-git output strategies (separate directory or side-by-side files)
 - Interactive A/B/C/D options for each manual revision
 
+### doc-quality-check
+Orchestrates the complete pipeline: runs doc-accuracy-audit → doc-quality-audit → doc-quality-revise in sequence with timestamped reports. Single-command execution of the full workflow with optional phase skipping.
+
+**Features:**
+- Timestamped reports (preserves audit history)
+- Error recovery between phases
+- Flexible phase control (skip phases, run subsets)
+- Status reporting at each stage
+
 ---
 
 ## The Pipeline
