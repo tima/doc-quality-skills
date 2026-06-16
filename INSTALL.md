@@ -24,8 +24,6 @@ ln -sf ~/projects/doc-quality-skills/skills/doc-quality-check ~/.claude/skills/d
 - Skills appear at top level in skill lists
 - Easy to invoke individually
 
----
-
 ## Option 2: Family Directory
 
 Install the entire family directory as a skill namespace.
@@ -47,9 +45,6 @@ ln -sf ~/projects/doc-quality-skills ~/.claude/skills/doc-quality-skills
 
 **Disadvantages:**
 - Longer invocation paths
-- May not be compatible with some Claude Code versions
-
----
 
 ## Option 3: Project-Local Installation
 
@@ -82,11 +77,9 @@ cp -r ~/projects/doc-quality-skills/skills/doc-quality-check .claude/skills/
 - Updates require re-copying
 - More disk space (duplicates)
 
----
-
 ## Verifying Installation
 
-After installation, reload Claude Code or restart your session, then verify:
+After installation, reload your skill system, then verify:
 
 ```bash
 ls -la ~/.claude/skills/ | grep doc-
@@ -99,21 +92,17 @@ Test by invoking any skill:
 /doc-quality-audit
 ```
 
----
-
 ## Updating
 
 **For symlinked installations (Options 1 & 2):**
 1. Pull updates to `~/projects/doc-quality-skills/`
 2. Symlinks automatically point to updated versions
-3. Reload Claude Code
+3. Reload your skill system
 
 **For copied installations (Option 3):**
 1. Pull updates to `~/projects/doc-quality-skills/`
 2. Re-copy changed skills to `.claude/skills/`
-3. Reload Claude Code
-
----
+3. Reload your skill system
 
 ## Uninstallation
 
@@ -138,18 +127,15 @@ rm -rf .claude/skills/doc-quality-revise
 rm -rf .claude/skills/doc-quality-check
 ```
 
----
-
 ## Troubleshooting
 
 **Skills don't appear after installation:**
-- Reload Claude Code: `/reload-plugins`
+- Reload skills (command varies by tool)
 - Check symlink targets: `ls -la ~/.claude/skills/`
 - Verify SKILL.md exists in each skill directory
 
 **Invocation doesn't work:**
 - Check for typos in skill names
-- Try `/help` to see available skills
 - Verify you've reloaded after installation
 
 **"Skill not found" errors:**

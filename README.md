@@ -1,6 +1,6 @@
 # Documentation Quality Skills
 
-A family of three complementary Claude Code skills for comprehensive documentation auditing and improvement.
+A family of four skills for comprehensive documentation auditing and improvement.
 
 ## The Skills
 
@@ -13,19 +13,13 @@ Audits documentation accuracy against a source of truth: CLI source code, Terraf
 - API Documentation (OpenAPI/Swagger specs)
 
 ### doc-quality-audit
-Audits documentation for intrinsic quality: tone, style, clarity, plain language compliance, formatting. Evaluates 10 quality dimensions using an embedded baseline style guide (IBM, PatternFly, Red Hat standards).
+Audits documentation for intrinsic quality: tone, style, clarity, plain language compliance, formatting. Evaluates quality dimensions using an embedded baseline style guide (IBM, PatternFly, Red Hat standards).
 
 **Dimensions:**
-- Tone/Voice Consistency
-- Clarity/Readability
-- Structure/Flow
-- Consistency
-- Completeness
-- Audience Appropriateness
-- Example Quality
-- Accessibility (optional)
-- SEO/Discoverability (optional)
-- Visual Formatting (optional)
+- Default (7 core): Tone, Clarity, Structure, Consistency, Completeness, Audience Appropriateness, Example Quality
+- Comprehensive mode adds 3 more: Accessibility, SEO/Discoverability, Visual Formatting
+
+The skill prompts you to choose between default and comprehensive mode at the start of each audit.
 
 ### doc-quality-revise
 Applies corrections from audit reports using a semi-automated workflow: auto-revises simple issues (word replacements, contractions, formatting), guides interactive manual review for complex changes (rewrites, missing content, structural changes).
@@ -46,11 +40,9 @@ Orchestrates the complete pipeline: runs doc-accuracy-audit → doc-quality-audi
 - Flexible phase control (skip phases, run subsets)
 - Status reporting at each stage
 
----
-
 ## The Pipeline
 
-The three skills form a complete documentation improvement workflow:
+The skills form a complete documentation improvement workflow:
 
 1. **Verify accuracy** → `/doc-accuracy-audit` → `accuracy-audit-report.md`
    - Compare docs against source code, schema, or spec
@@ -64,7 +56,7 @@ The three skills form a complete documentation improvement workflow:
    - Auto-revise simple issues
    - Guide interactive manual review for complex changes
 
----
+Use `/doc-quality-check` to automate this entire workflow with a single command.
 
 ## Installation
 
@@ -79,18 +71,17 @@ ln -sf ~/projects/doc-quality-skills/skills/doc-quality-revise ~/.claude/skills/
 ln -sf ~/projects/doc-quality-skills/skills/doc-quality-check ~/.claude/skills/doc-quality-check
 ```
 
-Then reload Claude Code or restart your session.
-
----
+Then reload your skill system.
 
 ## Usage
 
-Invoke from Claude Code:
+Invoke skills by name:
 
 ```
 /doc-accuracy-audit
 /doc-quality-audit
 /doc-quality-revise
+/doc-quality-check
 ```
 
 Or describe your intent naturally -- each skill triggers on relevant phrases like:
@@ -99,8 +90,7 @@ Or describe your intent naturally -- each skill triggers on relevant phrases lik
 - "verify our API docs match the OpenAPI spec"
 - "audit documentation for tone and clarity"
 - "apply fixes from the audit report"
-
----
+- "run the full documentation quality pipeline"
 
 ## Test Documentation
 
@@ -110,47 +100,6 @@ Shared test docs in `test-docs/`:
 
 These files are used by both doc-quality-audit and doc-quality-revise for testing and demonstration.
 
----
-
-## Project Structure
-
-```
-doc-quality-skills/
-  README.md                    # This file
-  INSTALL.md                   # Installation instructions
-  docs/                        # Design specs and implementation plans
-  test-docs/                   # Shared test documentation
-  skills/                      # Individual skills
-    doc-accuracy-audit/        # Accuracy audit skill
-      SKILL.md
-      README.md
-      evals/evals.json
-    doc-quality-audit/         # Quality audit skill
-      SKILL.md
-      README.md
-    doc-quality-revise/        # Revision application skill
-      SKILL.md
-      README.md
-      TEST_RESULTS.md
-    doc-quality-check/         # Pipeline orchestrator
-      SKILL.md
-      README.md
-      TEST_RESULTS.md
-```
-
----
-
-## History
-
-This family repository consolidates three previously standalone projects:
-- `doc-quality-audit-skill` (3 commits)
-- `doc-accuracy-audit-skill` (1 commit)
-- `doc-quality-revise-skill` (13 commits)
-
-All git history has been preserved via subtree merge. Original standalone projects remain available but are no longer actively maintained.
-
----
-
 ## Related Skills
 
 These skills complement each other but are independent. You can use any combination:
@@ -158,8 +107,6 @@ These skills complement each other but are independent. You can use any combinat
 - Use doc-quality-audit alone for style/tone reviews
 - Use doc-quality-revise alone if you have existing audit reports
 
----
-
 ## License
 
-See individual skill directories for license information.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
