@@ -43,6 +43,22 @@ Reference the style guide at `style-guide.md` (distilled from IBM Style, Pattern
 
 ## Step 1: Gather Context
 
+**Config file check:**
+
+Check for `.doc-quality.yml` in current directory:
+```bash
+ls -la .doc-quality.yml
+```
+
+If exists:
+- Read with `cat .doc-quality.yml`
+- Parse relevant fields (style_guide, rules.skip_rules, severity_thresholds, incremental.enabled, incremental.since, output.path)
+- Extract values: `grep "^style_guide:" .doc-quality.yml | cut -d: -f2 | xargs`
+- Show: "Using config: .doc-quality.yml"
+- Apply overrides to defaults
+
+If not found: Show "Using defaults (no config found)"
+
 Stop and ask the user for the following information. Do NOT proceed to scope confirmation until you have this:
 
 1. **Documentation sources** - What documentation should be audited?
@@ -62,6 +78,16 @@ Ask these in a conversational way. If the user provides some but not all context
 
 **Important:** If documentation sources include URLs and you cannot access them, state "Information not found" and ask the user to provide the content or local paths.
 
+**Incremental mode check:**
+
+If `--since <git-ref>` flag present:
+- Check git repo: `git rev-parse --git-dir`
+- If not a git repo: Error "Incremental mode requires git repository"
+- Get changed files: `git diff --name-only <ref> HEAD`
+- Filter to documentation files (*.md, docs/, *.mdx, *.rst)
+- Store as `changed_files` list
+- Show: "Incremental audit since {ref} - found X changed doc files"
+
 ---
 
 ## Step 2: Confirm Scope
@@ -72,6 +98,8 @@ Once you have the context, explain the audit scope:
 - Document count (after reading/scanning provided sources)
 - Dimension list (which of the 10 dimensions are active)
 - Estimated time based on doc size (use heuristic: ~2-3 minutes per doc for core dimensions, ~4-5 minutes for comprehensive)
+
+**If incremental mode:** Show "Incremental audit will check only X changed files for quality issues"
 
 **Then ask:** "Do you want the full audit, or would you like to narrow the scope?" (e.g., "just audit getting-started guides", "only check CLI reference docs")
 
@@ -87,7 +115,17 @@ If the document count is 50+ files, present these options:
 
 ## Step 3: Execute the Audit
 
-Perform the audit on the provided documentation. Follow these **Strict Adherence Rules**:
+Perform the audit on the provided documentation.
+
+**If incremental mode:** Only audit files in `changed_files` list. Report "Incremental audit since {ref} - audited X of Y total files" in final summary.
+
+**File-level progress (for doc sets with 10+ files):**
+Before auditing each file, show: `Auditing... [current/total files] {filename}`
+Example: `Auditing... [15/87 files] api-reference.md`
+
+If doc set has <10 files, skip progress (fast enough).
+
+Follow these **Strict Adherence Rules**:
 
 ### Zero-Hallucination Policy
 - If information is unavailable, missing, or outside your access, state: **"Information not found."**

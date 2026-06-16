@@ -1,0 +1,37 @@
+# Optional config for doc-quality-skills
+# Place in project root as .doc-quality.yml
+
+# Override default style guide
+style_guide: path/to/custom-style.md
+
+# Rule overrides
+rules:
+  # Override auto-revision behavior (ignore|warn|error)
+  contractions: ignore
+
+  # Add custom word replacements
+  word_replacements:
+    - from: utilise
+      to: utilize
+    - from: colour
+      to: color
+
+  # Disable specific rules
+  skip_rules:
+    - Plain Language #14  # No contractions rule
+
+# Severity thresholds
+severity_thresholds:
+  critical: fail     # fail|warn|ignore
+  moderate: warn
+  minor: ignore
+
+# Incremental mode defaults
+incremental:
+  enabled: false
+  since: HEAD~3      # Git ref for changed files
+
+# Output configuration
+output:
+  format: markdown   # markdown|json
+  path: reports/     # Output directory (relative to project root)

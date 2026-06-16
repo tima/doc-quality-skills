@@ -150,8 +150,8 @@ Running documentation quality check on {docs_path}
 
 2. Invoke BOTH skills concurrently (single message, two Skill tool calls):
    ```
-   /doc-accuracy-audit {docs_path} --output {accuracy_report_file}
-   /doc-quality-audit {docs_path} --output {quality_report_file}
+   /doc-accuracy-audit {docs_path} --output {accuracy_report_file} {--dry-run if dry_run flag}
+   /doc-quality-audit {docs_path} --output {quality_report_file} {--dry-run if dry_run flag}
    ```
 
 3. After both complete, check for both report files:
@@ -181,7 +181,7 @@ Running documentation quality check on {docs_path}
 
 2. Invoke skill using Skill tool:
    ```
-   /doc-accuracy-audit {docs_path} --output {accuracy_report_file}
+   /doc-accuracy-audit {docs_path} --output {accuracy_report_file} {--dry-run if dry_run flag}
    ```
 
 3. After skill completes, check for report file:
@@ -212,7 +212,7 @@ Running documentation quality check on {docs_path}
 
 2. Invoke skill using Skill tool:
    ```
-   /doc-quality-audit {docs_path} --output {quality_report_file}
+   /doc-quality-audit {docs_path} --output {quality_report_file} {--dry-run if dry_run flag}
    ```
 
 3. After skill completes, check for report file:
@@ -244,15 +244,15 @@ Running documentation quality check on {docs_path}
 2. Build skill invocation based on which reports exist:
    - If both reports exist:
      ```
-     /doc-quality-revise --accuracy-report {accuracy_report_file} --quality-report {quality_report_file}
+     /doc-quality-revise --accuracy-report {accuracy_report_file} --quality-report {quality_report_file} {--dry-run if dry_run flag}
      ```
    - If only accuracy report exists (quality was skipped):
      ```
-     /doc-quality-revise --accuracy-report {accuracy_report_file}
+     /doc-quality-revise --accuracy-report {accuracy_report_file} {--dry-run if dry_run flag}
      ```
    - If only quality report exists (accuracy was skipped):
      ```
-     /doc-quality-revise --quality-report {quality_report_file}
+     /doc-quality-revise --quality-report {quality_report_file} {--dry-run if dry_run flag}
      ```
 
 3. Invoke skill using Skill tool with constructed arguments

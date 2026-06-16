@@ -51,6 +51,22 @@ Optional flags:
 
 ## Step 1: Gather Context
 
+**Config file check:**
+
+Check for `.doc-quality.yml` in current directory:
+```bash
+ls -la .doc-quality.yml
+```
+
+If exists:
+- Read with `cat .doc-quality.yml`
+- Parse relevant fields (style_guide, incremental.enabled, incremental.since, output.path)
+- Extract values: `grep "^style_guide:" .doc-quality.yml | cut -d: -f2 | xargs`
+- Show: "Using config: .doc-quality.yml"
+- Apply overrides to defaults
+
+If not found: Show "Using defaults (no config found)"
+
 Stop and ask the user for the following information. Do NOT proceed to the audit until you have this.
 
 ### Identify the Project Type
@@ -87,6 +103,16 @@ If the project type is not clear from the user's request, ask: "What type of pro
 
 Ask these in a conversational way. If the user provides some but not all context, ask for the missing pieces.
 
+**Incremental mode check:**
+
+If `--since <git-ref>` flag present:
+- Check git repo: `git rev-parse --git-dir`
+- If not a git repo: Error "Incremental mode requires git repository"
+- Get changed files: `git diff --name-only <ref> HEAD`
+- Filter to documentation files (*.md, docs/, *.mdx, *.rst)
+- Store as `changed_files` list
+- Show: "Incremental audit since {ref} - found X changed doc files"
+
 ---
 
 ## Step 2: Scope the Audit
@@ -100,7 +126,11 @@ Once you have the context, explain the full audit scope. The audit has 4 tasks t
 | 3. Multi-Source Alignment | Upstream vs downstream docs | Registry vs enterprise docs | Spec vs docs site |
 | 4. Example Validation | Trace command through code | Validate HCL against schema | Validate examples against spec |
 
-Present the 4 tasks using the labels appropriate to the project type. Then ask: "Do you want the full audit, or would you like to focus on specific areas?"
+Present the 4 tasks using the labels appropriate to the project type.
+
+**If incremental mode:** Show "Incremental audit will check only X changed files against source of truth"
+
+Then ask: "Do you want the full audit, or would you like to focus on specific areas?"
 
 If the project is large (100+ commands, resources, or endpoints), offer to start with primary items and skip edge cases.
 
@@ -118,7 +148,11 @@ Before you start analyzing:
 
 ## Step 4: Execute the Audit
 
-Perform the requested tasks. Follow these **Strict Adherence Rules** religiously:
+Perform the requested tasks.
+
+**If incremental mode:** Only audit files in `changed_files` list. For each task, check if doc files exist in changed list before auditing. Report "Incremental audit since {ref} - audited X of Y total files" in final report.
+
+Follow these **Strict Adherence Rules** religiously:
 
 ### Zero-Hallucination Policy
 

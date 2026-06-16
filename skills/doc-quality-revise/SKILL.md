@@ -68,6 +68,22 @@ Stop and gather required information before proceeding. Do NOT start parsing unt
 
 **Read the reports** using the Read tool on discovered/specified paths.
 
+**Config file check:**
+
+Check for `.doc-quality.yml` in current directory:
+```bash
+ls -la .doc-quality.yml
+```
+
+If exists:
+- Read with `cat .doc-quality.yml`
+- Parse relevant fields (rules.contractions, rules.word_replacements, rules.skip_rules, output.path)
+- Extract values: `grep "^  contractions:" .doc-quality.yml | cut -d: -f2 | xargs`
+- Show: "Using config: .doc-quality.yml"
+- Apply overrides to auto-revision logic
+
+If not found: Show "Using defaults (no config found)"
+
 **Documentation root directory:**
 
 Ask the user for:
@@ -264,12 +280,20 @@ For each auto-revisable finding:
 1. Read the file containing the current text
 2. Search for exact match of "Current Text" from audit report
 3. If found: replace with "Suggestion" text (in memory only, do not write yet)
-4. If not found: 
-   - Flag as "TEXT_NOT_FOUND"
-   - Skip this revision (do not include in diff preview)
-   - Track in skipped revisions count
-   - Will be reported as text mismatch error in final summary
-   - See Phase 5 Error Handling for detailed user notification
+4. If not found:
+   - **Attempt fuzzy match:**
+     - Extract ±20 lines around reported location using Bash: `sed -n 'start,end p' file`
+     - For each line, compute word overlap with "Current Text": tokenize both, count common words / total words
+     - If any candidate >80% similar:
+       - Show: `TEXT_NOT_FOUND: "{original}" - Did you mean: "{candidate}" (line X, 85% match)? (y/n)`
+       - If yes: use candidate as "Current Text", proceed with revision
+       - If no: skip as below
+     - If no good match (all <80%):
+       - Flag as "TEXT_NOT_FOUND"
+       - Skip this revision (do not include in diff preview)
+       - Track in skipped revisions count
+       - Will be reported as text mismatch error in final summary
+       - See Phase 5 Error Handling for detailed user notification
 
 Track all revisions in memory:
 ```
