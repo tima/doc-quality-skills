@@ -12,7 +12,7 @@ examples:
   - /doc-accuracy-audit docs/cli/
   - /doc-accuracy-audit docs/terraform/ --output provider-audit.md
 outputs:
-  - "{project}-accuracy-audit-{timestamp}.md"
+  - "{project}-accuracy-audit-YYYYMMDD-HHMM-UTC.md"
 prerequisites:
   - Source code, provider schema, or OpenAPI spec
   - Documentation files or URLs

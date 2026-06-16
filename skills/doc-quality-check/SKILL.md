@@ -13,8 +13,8 @@ examples:
   - /doc-quality-check docs/ --audit-only
   - /doc-quality-check docs/ --parallel
 outputs:
-  - "{project}-accuracy-audit-{timestamp}.md"
-  - "{project}-quality-audit-{timestamp}.md"
+  - "{project}-accuracy-audit-YYYYMMDD-HHMM-UTC.md"
+  - "{project}-quality-audit-YYYYMMDD-HHMM-UTC.md"
   - Revised documentation (if not --audit-only)
 prerequisites:
   - doc-accuracy-audit skill
@@ -104,13 +104,13 @@ Single phase:
 
 ### Step 2: Generate Timestamp and Project Name
 
-**Capture timestamp** using Bash:
+**Capture UTC timestamp** using Bash:
 
 ```bash
-date +"%Y%m%d-%H%M"
+date -u +"%Y%m%d-%H%M-UTC"
 ```
 
-Store result as `timestamp` (e.g., "20260615-1430")
+Store result as `timestamp` (e.g., "20260615-1430-UTC")
 
 **Derive project name from docs_path:**
 

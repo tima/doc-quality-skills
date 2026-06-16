@@ -11,7 +11,7 @@ examples:
   - /doc-quality-audit docs/
   - /doc-quality-audit docs/ --output quality-report.md
 outputs:
-  - "{project}-quality-audit-{timestamp}.md"
+  - "{project}-quality-audit-YYYYMMDD-HHMM-UTC.md"
 prerequisites:
   - Documentation files or URLs
 ---
