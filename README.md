@@ -92,7 +92,14 @@ Or describe your intent naturally -- each skill triggers on relevant phrases lik
 - "apply fixes from the audit report"
 - "run the full documentation quality pipeline"
 
-## Test Documentation
+## Testing
+
+Run test suite to validate eval structure:
+```bash
+./test-runner.sh
+```
+
+Each skill has evals in `skills/<skill-name>/evals/evals.json` covering common scenarios and edge cases.
 
 Shared test docs in `test-docs/`:
 - `sample-cli-doc.md` - CLI documentation with intentional quality and accuracy issues

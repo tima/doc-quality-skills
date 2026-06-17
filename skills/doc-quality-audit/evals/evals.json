@@ -1,0 +1,40 @@
+{
+  "skill_name": "doc-quality-audit",
+  "evals": [
+    {
+      "id": 1,
+      "type": "core-dimensions",
+      "prompt": "Can you audit the documentation in docs/ for quality issues? I want to check tone, clarity, structure, consistency, completeness, audience appropriateness, and example quality. Core dimensions only. The docs are local markdown files for a CLI tool.",
+      "expected_output": "The skill should ask for context (doc sources, quality dimensions, additional style guides). User confirms core dimensions. Should perform audit on all markdown files in docs/ directory, checking all 7 core dimensions. Should report findings with severity levels, confidence annotations, specific text quotes, and style guide rule citations. Should generate markdown report with summary and detailed findings grouped by dimension.",
+      "files": ["docs/*.md"]
+    },
+    {
+      "id": 2,
+      "type": "comprehensive-dimensions",
+      "prompt": "I need a comprehensive quality audit of the API documentation at https://docs.example.com/api/. Check all 10 dimensions including accessibility, SEO, and visual formatting. Use only the embedded baseline style guide.",
+      "expected_output": "The skill should detect web URL source, ask for comprehensive vs core dimensions. User confirms comprehensive. Should fetch all pages from the URL, perform audit across all 10 dimensions. Should check for alt text, screen reader compatibility, heading structure, link text quality, keyword placement, code block formatting. Report should include all dimensions with findings labeled by confidence level.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "type": "plain-language-check",
+      "prompt": "The docs in /Users/me/project/docs/ have some sentences that are way too long and hard to read. Can you just check for plain language compliance - long sentences, jargon without definitions, that kind of thing? Don't need the full audit, just plain language issues.",
+      "expected_output": "The skill should scope to clarity/readability dimension only. Should flag sentences 26-39 words as Moderate, 40+ words as Critical (Plain Language #1). Should identify jargon without definitions, unclear phrasing, walls of text. Report should cite Plain Language rules from embedded style guide. Should skip other dimensions.",
+      "files": ["docs/*.md"]
+    },
+    {
+      "id": 4,
+      "type": "large-doc-set",
+      "prompt": "We have 150 markdown files in docs/ covering our entire platform. Can you audit them all for quality issues? Core dimensions.",
+      "expected_output": "The skill should detect large doc set (50+ files). Should offer options: 1) Full audit with parallel subagents, 2) Narrow to subset, 3) Sample audit. User chooses full audit. Should group docs by type/directory, dispatch parallel subagents with audit instructions, aggregate findings, show progress as subagents complete. Final report should unify findings across all 150 files.",
+      "files": ["docs/**/*.md"]
+    },
+    {
+      "id": 5,
+      "type": "dry-run",
+      "prompt": "Can you audit docs/getting-started/ for quality issues? Use --dry-run flag so I can see what the report would look like without saving it.",
+      "expected_output": "The skill should perform normal audit on docs/getting-started/. After audit completes, should show full report to screen with summary and findings. Should display 'DRY RUN: Would save to {filename}' message. Should NOT write file. Should END without asking to save.",
+      "files": ["docs/getting-started/*.md"]
+    }
+  ]
+}

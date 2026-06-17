@@ -1,0 +1,40 @@
+{
+  "skill_name": "doc-quality-revise",
+  "evals": [
+    {
+      "id": 1,
+      "type": "auto-revisions-only",
+      "prompt": "I have a quality audit report at quality-report.md. The docs are in docs/. Can you apply the auto-revisable fixes? Just the simple replacements, I'll handle the manual ones later.",
+      "expected_output": "The skill should read quality-report.md, categorize findings into auto-revisable vs manual. Should show summary with counts by category, ask for confirmation. Should preview unified diffs for auto-revisions. Should apply auto-revisions to files, create git branch, commit changes. Should skip manual review phase. Should report how many auto-revisions applied and how many manual reviews remain.",
+      "files": ["quality-report.md", "docs/*.md"]
+    },
+    {
+      "id": 2,
+      "type": "full-workflow",
+      "prompt": "I have both an accuracy report at accuracy-report.md and a quality report at quality-report.md. Docs are in docs/. Can you apply all the fixes interactively?",
+      "expected_output": "The skill should read both reports, merge findings, categorize. Should show summary by category, ask for confirmation. Should preview auto-revisions as diffs, apply them with git branch and commit. Should then enter interactive mode for manual reviews, showing each finding with context and asking for user input. Should apply manual fixes to files, commit after each. Should report final statistics.",
+      "files": ["accuracy-report.md", "quality-report.md", "docs/*.md"]
+    },
+    {
+      "id": 3,
+      "type": "text-not-found",
+      "prompt": "Apply fixes from quality-report.md to docs/. The report has some 'Current Text' entries that might not match exactly because the docs changed since the audit.",
+      "expected_output": "The skill should attempt exact match first. If TEXT_NOT_FOUND, should attempt fuzzy match within ±20 lines of location. Should compute word overlap similarity. If >80% match found, should ask user 'Did you mean: {candidate} (85% match)? (y/n)'. If yes, use candidate and proceed. If no or no good match, skip revision and track as TEXT_NOT_FOUND error. Should report skipped revisions in final summary.",
+      "files": ["quality-report.md", "docs/*.md"]
+    },
+    {
+      "id": 4,
+      "type": "dry-run",
+      "prompt": "Can you preview the changes from quality-report.md for docs/ using --dry-run? I just want to see what would happen without actually changing files.",
+      "expected_output": "The skill should parse report, categorize findings, show summary with counts. Should preview all auto-revisions as unified diffs. When reaching Phase 3 (apply auto-revisions), should check --dry-run flag and show 'DRY RUN: Would apply X auto-revisions to Y files'. Should skip all file writes. When reaching Phase 4 (interactive manual), should show 'DRY RUN: Would prompt for Z manual reviews'. Should END without modifying files.",
+      "files": ["quality-report.md", "docs/*.md"]
+    },
+    {
+      "id": 5,
+      "type": "config-overrides",
+      "prompt": "Apply fixes from quality-report.md to docs/. We have a .doc-quality.yml config file that sets contractions to 'ignore' - I don't want those auto-fixed even though the report flags them.",
+      "expected_output": "The skill should check for .doc-quality.yml at start, read it, parse rules.contractions field. Should apply override to categorization logic. Findings flagged for contractions should be moved to manual review or skipped based on config. Should show 'Using config: .doc-quality.yml' message. Auto-revisions should exclude contraction fixes. Report should note config was used.",
+      "files": ["quality-report.md", "docs/*.md", ".doc-quality.yml"]
+    }
+  ]
+}
