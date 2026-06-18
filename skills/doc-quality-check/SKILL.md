@@ -50,6 +50,10 @@ Optional flags:
 - `--quality-only` - Run only quality audit
 - `--parallel` - Run accuracy + quality audits concurrently (faster)
 - `--dry-run` - Preview mode, no files modified (passed to all skills)
+- `--since <git-ref>` - Incremental mode, audit only changed files (passed to audit skills)
+- `--type <cli|terraform|api>` - Project type (passed to accuracy audit, skip type prompt)
+- `--source <path-or-url>` - Source of truth (passed to accuracy audit, skip source prompt)
+- `--dimensions <core|comprehensive>` - Quality dimensions (passed to quality audit, skip dimension prompt)
 
 **Flag validation:** Cannot combine `--skip-accuracy` + `--skip-quality` (nothing to audit)
 
@@ -87,6 +91,10 @@ Single phase:
 - `quality_only` - Boolean, `--quality-only` present
 - `parallel` - Boolean, `--parallel` present
 - `dry_run` - Boolean, `--dry-run` present
+- `since_ref` - String, value after `--since`
+- `type_flag` - String, value after `--type`
+- `source_flag` - String, value after `--source`
+- `dimensions_flag` - String, value after `--dimensions`
 
 **If `dry_run`:** Show "DRY RUN MODE - no files will be modified" at start
 
@@ -150,8 +158,8 @@ Running documentation quality check on {docs_path}
 
 2. Invoke BOTH skills concurrently (single message, two Skill tool calls):
    ```
-   /doc-accuracy-audit {docs_path} --output {accuracy_report_file} {--dry-run if dry_run flag}
-   /doc-quality-audit {docs_path} --output {quality_report_file} {--dry-run if dry_run flag}
+   /doc-accuracy-audit {docs_path} --output {accuracy_report_file} {--dry-run if dry_run} {--since <ref> if since_ref} {--type <val> if type_flag} {--source <val> if source_flag}
+   /doc-quality-audit {docs_path} --output {quality_report_file} {--dry-run if dry_run} {--since <ref> if since_ref} {--dimensions <val> if dimensions_flag}
    ```
 
 3. After both complete, check for both report files:
@@ -181,7 +189,7 @@ Running documentation quality check on {docs_path}
 
 2. Invoke skill using Skill tool:
    ```
-   /doc-accuracy-audit {docs_path} --output {accuracy_report_file} {--dry-run if dry_run flag}
+   /doc-accuracy-audit {docs_path} --output {accuracy_report_file} {--dry-run if dry_run} {--since <ref> if since_ref} {--type <val> if type_flag} {--source <val> if source_flag}
    ```
 
 3. After skill completes, check for report file:
@@ -212,7 +220,7 @@ Running documentation quality check on {docs_path}
 
 2. Invoke skill using Skill tool:
    ```
-   /doc-quality-audit {docs_path} --output {quality_report_file} {--dry-run if dry_run flag}
+   /doc-quality-audit {docs_path} --output {quality_report_file} {--dry-run if dry_run} {--since <ref> if since_ref} {--dimensions <val> if dimensions_flag}
    ```
 
 3. After skill completes, check for report file:

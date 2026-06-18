@@ -1,5 +1,9 @@
 # doc-quality-revise Quick Reference
 
+## When to Use
+
+You have an audit report and want to apply fixes.
+
 ## Usage
 ```
 /doc-quality-revise [flags]
@@ -40,6 +44,10 @@
 ```
 /doc-quality-revise --dry-run
 ```
+
+## Flag Conflicts
+
+`--auto-approve` and `--interactive-only` cannot be combined.
 
 ## Revision Categories
 

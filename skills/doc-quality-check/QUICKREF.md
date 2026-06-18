@@ -1,5 +1,9 @@
 # doc-quality-check Quick Reference
 
+## When to Use
+
+You want the full pipeline (audit + fix) in one command.
+
 ## Usage
 ```
 /doc-quality-check <path> [flags]
@@ -14,7 +18,16 @@
 --quality-only          Run only quality audit
 --parallel              Run accuracy + quality audits concurrently
 --dry-run               Preview without modifying files
+--since <git-ref>       Incremental mode (changed files only)
+--type <cli|terraform|api>  Project type (passed to accuracy audit)
+--source <path-or-url>  Source of truth (passed to accuracy audit)
+--dimensions <core|comprehensive>  Quality dimensions (passed to quality audit)
 ```
+
+## Flag Conflicts
+
+- `--skip-accuracy` + `--skip-quality` cannot be combined (nothing to audit)
+- `--audit-only` + `--accuracy-only` or `--quality-only` cannot be combined
 
 ## Examples
 

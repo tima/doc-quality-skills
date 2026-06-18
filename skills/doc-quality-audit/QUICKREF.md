@@ -1,5 +1,9 @@
 # doc-quality-audit Quick Reference
 
+## When to Use
+
+Docs need style, tone, clarity, or readability review.
+
 ## Usage
 ```
 /doc-quality-audit <path> [flags]
@@ -10,6 +14,8 @@
 --output <filename>     Override default report filename
 --dry-run               Show report without saving
 --since <git-ref>       Audit only files changed since ref
+--dimensions <core|comprehensive>  Skip dimension prompt
+--style-guide <path>    Additional style guide (skip prompt)
 ```
 
 ## Examples

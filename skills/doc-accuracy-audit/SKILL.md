@@ -38,6 +38,10 @@ Optional flags:
 - `--output <filename>` - Override default report filename (default: `{project-name}-docs-audit.md`)
 - `--dry-run` - Display report without saving (preview mode)
 - `--since <git-ref>` - Audit only files changed since git ref (incremental mode)
+- `--type <cli|terraform|api>` - Project type (skip type detection prompt)
+- `--source <path-or-url>` - Source of truth: code repo or spec file (skip source prompt)
+- `--upstream <path-or-url>` - Upstream docs location (skip upstream prompt)
+- `--downstream <path-or-url>` - Downstream/enterprise docs (skip downstream prompt)
 
 **Usage:**
 ```
@@ -45,29 +49,16 @@ Optional flags:
 /doc-accuracy-audit path/to/docs --output custom-report.md
 /doc-accuracy-audit path/to/docs --dry-run
 /doc-accuracy-audit path/to/docs --since HEAD~3
+/doc-accuracy-audit docs/cli/ --type cli --source https://github.com/org/repo
 ```
 
 ---
 
 ## Step 1: Gather Context
 
-**Config file check:**
+**Config file check:** Follow config loading procedure in [CONFIG.md](../../CONFIG.md#loading-doc-qualityyml). This skill uses fields: style_guide, incremental.*, output.path
 
-Check for `.doc-quality.yml` in current directory:
-```bash
-ls -la .doc-quality.yml
-```
-
-If exists:
-- Read with `cat .doc-quality.yml`
-- Parse relevant fields (style_guide, incremental.enabled, incremental.since, output.path)
-- Extract values: `grep "^style_guide:" .doc-quality.yml | cut -d: -f2 | xargs`
-- Show: "Using config: .doc-quality.yml"
-- Apply overrides to defaults
-
-If not found: Show "Using defaults (no config found)"
-
-Stop and ask the user for the following information. Do NOT proceed to the audit until you have this.
+Stop and ask the user for the following information. Do NOT proceed to the audit until you have this. **Skip any question already answered by inline flags** (--type, --source, --upstream, --downstream).
 
 ### Identify the Project Type
 
@@ -77,7 +68,7 @@ First, determine which type of project you are auditing:
 - **Terraform Provider** -- A Terraform provider with resources, data sources, and schema attributes
 - **API Documentation** -- An API with an OpenAPI/Swagger specification
 
-If the project type is not clear from the user's request, ask: "What type of project is this -- a CLI tool, a Terraform provider, or an API with an OpenAPI spec?"
+If `--type` flag provided, use that value. Otherwise, if the project type is not clear from the user's request, ask: "What type of project is this -- a CLI tool, a Terraform provider, or an API with an OpenAPI spec?"
 
 ### Context Questions by Type
 
@@ -103,15 +94,7 @@ If the project type is not clear from the user's request, ask: "What type of pro
 
 Ask these in a conversational way. If the user provides some but not all context, ask for the missing pieces.
 
-**Incremental mode check:**
-
-If `--since <git-ref>` flag present:
-- Check git repo: `git rev-parse --git-dir`
-- If not a git repo: Error "Incremental mode requires git repository"
-- Get changed files: `git diff --name-only <ref> HEAD`
-- Filter to documentation files (*.md, docs/, *.mdx, *.rst)
-- Store as `changed_files` list
-- Show: "Incremental audit since {ref} - found X changed doc files"
+**Incremental mode:** If `--since` flag present, follow incremental mode procedure in [CONFIG.md](../../CONFIG.md#incremental-mode---since).
 
 ---
 
@@ -150,15 +133,13 @@ Before you start analyzing:
 
 Perform the requested tasks.
 
-**If incremental mode:** Only audit files in `changed_files` list. For each task, check if doc files exist in changed list before auditing. Report "Incremental audit since {ref} - audited X of Y total files" in final report.
+**If incremental mode active:** Only audit files in `changed_files` list (see [CONFIG.md](../../CONFIG.md#incremental-mode---since)).
 
 Follow these **Strict Adherence Rules** religiously:
 
 ### Zero-Hallucination Policy
 
-- If information is unavailable, missing, or outside your access, state: **"Information not found."**
-- Do NOT infer, speculate, or bridge gaps with "likely" or "probably."
-- If a link is dead or a file is inaccessible, say so explicitly.
+Follow the canonical policy in [CONFIG.md](../../CONFIG.md#zero-hallucination-policy).
 
 ### Contradiction Flagging
 
@@ -308,10 +289,7 @@ If you cannot access documentation or the source of truth:
 - Otherwise, use default pattern: `{project-name}-docs-audit.md`
 - **Before saving:** 
   - If `--dry-run` flag: Display report to screen, show "DRY RUN: Would save to {filename}", skip file write. END HERE.
-  - Otherwise: Check if a file with that name already exists. If it does, ask the user whether to:
-    - Overwrite it
-    - Create a new version (e.g., `{project-name}-docs-audit-2.md`)
-    - Use a different filename
+  - Otherwise: Save to default timestamped filename. If file already exists (unlikely with timestamps), append `-2` suffix automatically without prompting.
 
 ### Report structure
 

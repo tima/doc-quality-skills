@@ -26,6 +26,8 @@ Optional flags:
 - `--auto-approve` - Auto-accept all simple revisions without preview (batch mode)
 - `--interactive-only` - Skip auto-revisions, only interactive manual review
 
+**Flag validation:** Cannot combine `--auto-approve` + `--interactive-only` (nothing to do)
+
 **Usage:**
 ```
 /doc-quality-revise
@@ -68,21 +70,7 @@ Stop and gather required information before proceeding. Do NOT start parsing unt
 
 **Read the reports** using the Read tool on discovered/specified paths.
 
-**Config file check:**
-
-Check for `.doc-quality.yml` in current directory:
-```bash
-ls -la .doc-quality.yml
-```
-
-If exists:
-- Read with `cat .doc-quality.yml`
-- Parse relevant fields (rules.contractions, rules.word_replacements, rules.skip_rules, output.path)
-- Extract values: `grep "^  contractions:" .doc-quality.yml | cut -d: -f2 | xargs`
-- Show: "Using config: .doc-quality.yml"
-- Apply overrides to auto-revision logic
-
-If not found: Show "Using defaults (no config found)"
+**Config file check:** Follow config loading procedure in [CONFIG.md](../../CONFIG.md#loading-doc-qualityyml). This skill uses fields: rules.contractions, rules.word_replacements, rules.skip_rules, output.path
 
 **Documentation root directory:**
 
@@ -190,19 +178,7 @@ The "Location" column affects whether a finding can be auto-revised:
 - Simple replacement suggestion (word/phrase substitution)
 
 **Ambiguity Handling:**
-If you cannot confidently categorize a finding using the above rules, flag it as "AMBIGUOUS" and ask the user:
-
-```
-Finding classification unclear:
-
-File: <filename>:<location>
-Current: "<current text>"
-Suggestion: "<suggestion>"
-
-Is this auto-revisable (simple replacement) or manual review (requires judgment)?
-```
-
-Do not guess. Wait for user response.
+If a finding doesn't clearly match auto-revisable criteria, default to manual review. Do not prompt the user for classification. Better to review interactively than to auto-apply a questionable change.
 
 ### Step 1.5: Detect Git Repository
 
@@ -240,7 +216,10 @@ Your choice?
 
 Handle user's choice before proceeding to Phase 2.
 
-### Step 1.6: Summarize Categorization
+### Step 1.6: Validate Flags and Summarize
+
+**Flag validation:**
+If `auto_approve` AND `interactive_only`: Error "Cannot combine --auto-approve with --interactive-only. Choose one mode."
 
 Present summary to user before proceeding:
 
@@ -254,7 +233,6 @@ Git repository: YES/NO
 Findings breakdown:
 - Auto-revisable: X findings across Y files
 - Manual review: Z findings across W files
-- Ambiguous: A findings (need classification)
 - File missing: B findings (will skip)
 
 Proceed with preview? (y/n)
@@ -559,6 +537,25 @@ Build queue of all manual review findings (from Phase 1 categorization, plus any
 
 Total count: M findings
 
+**Batch options (present before entering interactive loop):**
+
+```
+Manual Revisions: M findings
+
+Options:
+A) Review one-by-one (interactive)
+B) Apply all suggestions as-is (batch approve)
+C) Skip all manual revisions
+D) Filter by severity (review only CRITICAL, skip rest)
+
+Your choice?
+```
+
+- Option A: enter interactive loop below
+- Option B: apply all suggestions without prompting, commit each, skip to Step 4.4
+- Option C: skip entire Phase 4, go to Step 4.4 summary
+- Option D: filter queue to CRITICAL only, enter interactive loop with reduced set
+
 ### Step 4.2: Interactive Loop
 
 For each finding in the queue (index i from 1 to M):
@@ -584,6 +581,7 @@ A) Apply suggestion as-is
 B) Apply with modifications (you'll be prompted to edit)
 C) Skip this revision
 D) Show more context (surrounding lines)
+E) Apply all remaining as-is (batch approve rest)
 
 Your choice?
 ```
@@ -662,7 +660,14 @@ Your choice?
    ...
    <line N+5>
    ```
-4. Re-present the same revision with options A/B/C/D again
+4. Re-present the same revision with options A/B/C/D/E again
+
+**Option E: Apply all remaining**
+
+1. Apply current revision as-is (same as Option A)
+2. For all remaining revisions in queue: apply suggestion as-is without prompting
+3. Commit each revision (git workflow) or write to output location
+4. Skip to Step 4.4 summary
 
 ### Step 4.3: Progress Tracking
 
@@ -831,20 +836,7 @@ To resume:
 
 ### Zero-Hallucination Principle
 
-Throughout all phases, when encountering uncertainty:
-
-**DO:**
-- State "Information not found" or "Unclear how to proceed"
-- Ask user for clarification with specific options
-- Offer to skip unclear revisions
-
-**DO NOT:**
-- Infer or guess what the user meant
-- Bridge gaps with logical reasoning
-- Apply changes you're not confident about
-- Speculate about file locations, text matches, or user intent
-
-**Better to skip a revision than apply the wrong change.**
+Follow the canonical policy in [CONFIG.md](../../CONFIG.md#zero-hallucination-policy). In the revision context specifically: ask the user for clarification with specific options, and offer to skip unclear revisions rather than guessing.
 
 ---
 

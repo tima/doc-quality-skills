@@ -1,5 +1,9 @@
 # doc-accuracy-audit Quick Reference
 
+## When to Use
+
+Docs might not match source code, schema, or API spec.
+
 ## Usage
 ```
 /doc-accuracy-audit <path> [flags]
@@ -10,6 +14,10 @@
 --output <filename>     Override default report filename
 --dry-run               Show report without saving
 --since <git-ref>       Audit only files changed since ref
+--type <cli|terraform|api>  Project type (skip type prompt)
+--source <path-or-url>  Source of truth (skip source prompt)
+--upstream <path-or-url>  Upstream docs (skip prompt)
+--downstream <path-or-url> Downstream docs (skip prompt)
 ```
 
 ## Examples

@@ -20,11 +20,18 @@ prerequisites:
 
 Optional flags:
 - `--output <filename>` - Override default report filename (default: `{project-name}-quality-audit.md`)
+- `--dry-run` - Preview mode, show report without saving
+- `--since <git-ref>` - Audit only files changed since git ref (incremental mode)
+- `--dimensions <core|comprehensive>` - Skip dimension selection prompt (core=7, comprehensive=10)
+- `--style-guide <path>` - Additional style guide to reference (skip style guide prompt)
 
 **Usage:**
 ```
 /doc-quality-audit path/to/docs
 /doc-quality-audit path/to/docs --output custom-quality-report.md
+/doc-quality-audit path/to/docs --dry-run
+/doc-quality-audit path/to/docs --dimensions comprehensive
+/doc-quality-audit path/to/docs --since HEAD~3
 ```
 
 ---
@@ -43,23 +50,9 @@ Reference the style guide at `style-guide.md` (distilled from IBM Style, Pattern
 
 ## Step 1: Gather Context
 
-**Config file check:**
+**Config file check:** Follow config loading procedure in [CONFIG.md](../../CONFIG.md#loading-doc-qualityyml). This skill uses fields: style_guide, rules.skip_rules, severity_thresholds, incremental.*, output.path
 
-Check for `.doc-quality.yml` in current directory:
-```bash
-ls -la .doc-quality.yml
-```
-
-If exists:
-- Read with `cat .doc-quality.yml`
-- Parse relevant fields (style_guide, rules.skip_rules, severity_thresholds, incremental.enabled, incremental.since, output.path)
-- Extract values: `grep "^style_guide:" .doc-quality.yml | cut -d: -f2 | xargs`
-- Show: "Using config: .doc-quality.yml"
-- Apply overrides to defaults
-
-If not found: Show "Using defaults (no config found)"
-
-Stop and ask the user for the following information. Do NOT proceed to scope confirmation until you have this:
+Stop and ask the user for the following information. Do NOT proceed to scope confirmation until you have this. **Skip any question already answered by inline flags** (--dimensions, --style-guide):
 
 1. **Documentation sources** - What documentation should be audited?
    - Local file paths
@@ -78,15 +71,7 @@ Ask these in a conversational way. If the user provides some but not all context
 
 **Important:** If documentation sources include URLs and you cannot access them, state "Information not found" and ask the user to provide the content or local paths.
 
-**Incremental mode check:**
-
-If `--since <git-ref>` flag present:
-- Check git repo: `git rev-parse --git-dir`
-- If not a git repo: Error "Incremental mode requires git repository"
-- Get changed files: `git diff --name-only <ref> HEAD`
-- Filter to documentation files (*.md, docs/, *.mdx, *.rst)
-- Store as `changed_files` list
-- Show: "Incremental audit since {ref} - found X changed doc files"
+**Incremental mode:** If `--since` flag present, follow incremental mode procedure in [CONFIG.md](../../CONFIG.md#incremental-mode---since).
 
 ---
 
@@ -99,7 +84,7 @@ Once you have the context, explain the audit scope:
 - Dimension list (which of the 10 dimensions are active)
 - Estimated time based on doc size (use heuristic: ~2-3 minutes per doc for core dimensions, ~4-5 minutes for comprehensive)
 
-**If incremental mode:** Show "Incremental audit will check only X changed files for quality issues"
+**If incremental mode active:** Show "Incremental audit will check only X changed files for quality issues"
 
 **Then ask:** "Do you want the full audit, or would you like to narrow the scope?" (e.g., "just audit getting-started guides", "only check CLI reference docs")
 
@@ -117,7 +102,7 @@ If the document count is 50+ files, present these options:
 
 Perform the audit on the provided documentation.
 
-**If incremental mode:** Only audit files in `changed_files` list. Report "Incremental audit since {ref} - audited X of Y total files" in final summary.
+**If incremental mode active:** Only audit files in `changed_files` list (see [CONFIG.md](../../CONFIG.md#incremental-mode---since)).
 
 **File-level progress (for doc sets with 10+ files):**
 Before auditing each file, show: `Auditing... [current/total files] {filename}`
@@ -128,10 +113,8 @@ If doc set has <10 files, skip progress (fast enough).
 Follow these **Strict Adherence Rules**:
 
 ### Zero-Hallucination Policy
-- If information is unavailable, missing, or outside your access, state: **"Information not found."**
-- Do NOT infer, speculate, or bridge gaps with "likely" or "probably."
-- If a link is dead or a file is inaccessible, say so explicitly.
-- If doc type is unclear, ask for clarification rather than guessing.
+
+Follow the canonical policy in [CONFIG.md](../../CONFIG.md#zero-hallucination-policy).
 
 ### Evidence-Based Findings
 - Every finding must reference specific text (quote the problematic sentence/phrase)
@@ -330,7 +313,7 @@ Ask: "Save detailed report to file?"
 - Generate full markdown report (format below)
 - Save to current working directory
 - Filename: Use `--output` value if provided, otherwise `{project-name}-quality-audit.md`
-- Check if file exists before saving (same collision handling as doc-accuracy-audit)
+- If file already exists (unlikely with timestamps), append `-2` suffix automatically without prompting
 
 **If no:**
 - User can work from summary
