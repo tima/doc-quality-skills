@@ -56,6 +56,16 @@ You want the full pipeline (audit + fix) in one command.
 /doc-quality-check docs/ --dry-run
 ```
 
+**Incremental (changed files only):**
+```
+/doc-quality-check docs/ --since HEAD~5
+```
+
+**Skip prompts with inline context:**
+```
+/doc-quality-check docs/cli/ --type cli --source https://github.com/org/repo --dimensions core
+```
+
 ## Pipeline Phases
 
 **Phase 1:** Accuracy audit (doc-accuracy-audit)

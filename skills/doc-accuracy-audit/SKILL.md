@@ -35,7 +35,7 @@ This skill supports three project types:
 ## Arguments
 
 Optional flags:
-- `--output <filename>` - Override default report filename (default: `{project-name}-docs-audit.md`)
+- `--output <filename>` - Override default report filename (default: `{project-name}-accuracy-audit-YYYYMMDD-HHMM-UTC.md`)
 - `--dry-run` - Display report without saving (preview mode)
 - `--since <git-ref>` - Audit only files changed since git ref (incremental mode)
 - `--type <cli|terraform|api>` - Project type (skip type detection prompt)
@@ -286,10 +286,10 @@ If you cannot access documentation or the source of truth:
 ### File naming
 
 - If `--output` flag is provided, use that filename exactly
-- Otherwise, use default pattern: `{project-name}-docs-audit.md`
+- Otherwise, use default timestamped pattern: `{project-name}-accuracy-audit-YYYYMMDD-HHMM-UTC.md`
 - **Before saving:** 
   - If `--dry-run` flag: Display report to screen, show "DRY RUN: Would save to {filename}", skip file write. END HERE.
-  - Otherwise: Save to default timestamped filename. If file already exists (unlikely with timestamps), append `-2` suffix automatically without prompting.
+  - Otherwise: Save to timestamped filename. If file already exists (unlikely with timestamps), append `-2` suffix automatically without prompting.
 
 ### Report structure
 
@@ -470,7 +470,7 @@ If the docs have multiple complex examples, ask the user which one to validate i
 1. **Ask before assuming** -- If context is unclear, ask the user.
 2. **State gaps explicitly** -- "Information not found" is better than a guess.
 3. **Flag contradictions, don't reconcile them** -- Let the user see the conflict.
-4. **Ask before overwriting** -- If a report file with the same name exists, ask the user for permission before saving.
+4. **Auto-suffix on collision** -- If a timestamped file somehow already exists, append `-2` automatically without prompting.
 5. **Include metadata footer** -- Always end the report with AI provider, model name, and timestamp.
 6. **Deliver the report as Markdown** -- Save it, then show the user the path and key findings.
 7. **Use domain-appropriate methods** -- Source code for CLI, schema inspection + Go code for Terraform, spec parsing for API.
@@ -491,6 +491,6 @@ If the docs have multiple complex examples, ask the user which one to validate i
 
 **User:** Provides all context + indicates they want a full audit.
 
-**You:** Perform Tasks 1-4 with strict adherence, generate the report with metadata footer (AI provider, model, timestamp), ask before saving if a file exists, and share key findings with the user.
+**You:** Perform Tasks 1-4 with strict adherence, generate the report with metadata footer (AI provider, model, timestamp), save to timestamped filename, and share key findings with the user.
 
 ---

@@ -25,6 +25,7 @@ Optional flags:
 - `--quality-report <path>` - Path to quality audit report (default: auto-discover `*-quality-audit*.md`)
 - `--auto-approve` - Auto-accept all simple revisions without preview (batch mode)
 - `--interactive-only` - Skip auto-revisions, only interactive manual review
+- `--dry-run` - Preview without applying changes (shows what would be done, skips all writes)
 
 **Flag validation:** Cannot combine `--auto-approve` + `--interactive-only` (nothing to do)
 
@@ -788,27 +789,7 @@ To resume, either:
 
 ### Ambiguous Audit Findings
 
-**Error: Cannot categorize finding**
-
-In Phase 1 Step 1.4, if a finding doesn't fit auto-revisable or manual review patterns:
-
-```
-Finding classification unclear
-
-File: <filename>:<location>
-Current: "<current text>"
-Suggestion: "<suggestion>"
-Rule: <rule reference>
-
-Is this a simple replacement (auto-revisable) or does it require judgment (manual review)?
-
-A) Auto-revisable - Apply automatically in Phase 2/3
-B) Manual review - Handle interactively in Phase 4
-
-Your choice?
-```
-
-Use user's answer to categorize the finding.
+In Phase 1 Step 1.4, if a finding doesn't clearly match auto-revisable criteria: default to manual review. No prompt needed -- the finding will appear in the Phase 4 interactive queue. See Step 1.4.
 
 ### Mid-Workflow Interruption
 
