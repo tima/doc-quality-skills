@@ -3,3 +3,8 @@
 *.audit-report.md
 *.sw*
 .claude/
+*.skill
+.env
+*.key
+*.pem
+*-workspace/
