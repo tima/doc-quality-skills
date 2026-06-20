@@ -1,21 +1,7 @@
 ---
 name: doc-accuracy-audit
-description: Cross-reference docs against source of truth - finds ghost items, hidden items, detail mismatches
-triggers:
-  - audit docs against source
-  - verify docs match code
-  - check for ghost commands
-  - find undocumented resources
-  - compare docs to schema
+description: "Use when you need to cross-reference documentation against a source of truth — CLI source code, Terraform provider schemas, or OpenAPI specs. Triggers on: 'audit docs against source', 'verify docs match code', 'find ghost commands', 'check for undocumented resources', 'compare docs to schema'."
 compatibility: Requires source access (code/schema/spec) and docs (local/URLs)
-examples:
-  - /doc-accuracy-audit docs/cli/
-  - /doc-accuracy-audit docs/terraform/ --output provider-audit.md
-outputs:
-  - "{project}-accuracy-audit-YYYYMMDD-HHMM-UTC.md"
-prerequisites:
-  - Source code, provider schema, or OpenAPI spec
-  - Documentation files or URLs
 ---
 
 ## Overview

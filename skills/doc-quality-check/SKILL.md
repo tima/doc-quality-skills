@@ -1,25 +1,7 @@
 ---
 name: doc-quality-check
-description: Orchestrate complete documentation quality pipeline (accuracy -> quality -> revise) with timestamped reports
-triggers:
-  - run the doc quality pipeline
-  - check documentation quality
-  - audit and fix docs
-  - complete doc audit
+description: "Use when you want to run the complete documentation quality pipeline in one command: accuracy audit → quality audit → revisions. Triggers on: 'run the doc quality pipeline', 'check documentation quality', 'audit and fix docs', 'complete doc audit'."
 compatibility: Requires all three component skills installed
-examples:
-  - /doc-quality-check docs/
-  - /doc-quality-check docs/ --skip-accuracy
-  - /doc-quality-check docs/ --audit-only
-  - /doc-quality-check docs/ --parallel
-outputs:
-  - "{project}-accuracy-audit-YYYYMMDD-HHMM-UTC.md"
-  - "{project}-quality-audit-YYYYMMDD-HHMM-UTC.md"
-  - Revised documentation (if not --audit-only)
-prerequisites:
-  - doc-accuracy-audit skill
-  - doc-quality-audit skill
-  - doc-quality-revise skill
 ---
 
 # doc-quality-check

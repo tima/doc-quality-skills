@@ -1,19 +1,7 @@
 ---
 name: doc-quality-audit
-description: Evaluate docs for tone, style, clarity, plain language - reports issues with severity and suggestions
-triggers:
-  - audit docs for quality
-  - check documentation style
-  - evaluate tone and clarity
-  - plain language review
+description: "Use when you need to evaluate documentation for tone, style, clarity, and plain language compliance. Triggers on: 'audit docs for quality', 'check documentation style', 'evaluate tone and clarity', 'plain language review'."
 compatibility: Requires docs (local/URLs) - works standalone
-examples:
-  - /doc-quality-audit docs/
-  - /doc-quality-audit docs/ --output quality-report.md
-outputs:
-  - "{project}-quality-audit-YYYYMMDD-HHMM-UTC.md"
-prerequisites:
-  - Documentation files or URLs
 ---
 
 ## Arguments

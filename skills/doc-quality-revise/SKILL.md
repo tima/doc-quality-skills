@@ -1,21 +1,7 @@
 ---
 name: doc-quality-revise
-description: Apply audit corrections - auto-revise simple issues, guide interactive review for complex changes
-triggers:
-  - apply audit corrections
-  - fix documentation issues
-  - revise docs from audit
-  - implement quality fixes
+description: "Use when you have an audit report and want to apply corrections — auto-revise simple issues and guide interactive review for complex changes. Triggers on: 'apply audit corrections', 'fix documentation issues', 'revise docs from audit', 'implement quality fixes'."
 compatibility: Requires audit reports - works with/without git
-examples:
-  - /doc-quality-revise
-  - /doc-quality-revise --quality-report my-audit.md
-  - /doc-quality-revise --auto-approve
-outputs:
-  - Revised documentation files
-  - Git commits (if in git repo)
-prerequisites:
-  - Audit report from doc-quality-audit or doc-accuracy-audit
 ---
 
 ## Arguments
