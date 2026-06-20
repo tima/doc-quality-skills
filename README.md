@@ -25,23 +25,23 @@ A family of four skills for comprehensive documentation auditing and improvement
 
 ```bash
 # All skills, user scope — available in all sessions (recommended)
-npx skills add tima/doc-quality-skills -g
+npx skills add tima/doc-quality -g
 
 # All skills, project scope — this project only
-npx skills add tima/doc-quality-skills
+npx skills add tima/doc-quality
 
 # Specific skills only
-npx skills add tima/doc-quality-skills --skill doc-accuracy-audit -g
+npx skills add tima/doc-quality --skill doc-accuracy-audit -g
 ```
 
 Local development install:
 ```bash
-git clone https://github.com/tima/doc-quality-skills.git ~/projects/doc-quality-skills
+git clone https://github.com/tima/doc-quality.git ~/projects/doc-quality
 # Symlink each skill individually
-ln -sf ~/projects/doc-quality-skills/skills/doc-accuracy-audit ~/.claude/skills/doc-accuracy-audit
-ln -sf ~/projects/doc-quality-skills/skills/doc-quality-audit ~/.claude/skills/doc-quality-audit
-ln -sf ~/projects/doc-quality-skills/skills/doc-quality-revise ~/.claude/skills/doc-quality-revise
-ln -sf ~/projects/doc-quality-skills/skills/doc-quality-check ~/.claude/skills/doc-quality-check
+ln -sf ~/projects/doc-quality/skills/doc-accuracy-audit ~/.claude/skills/doc-accuracy-audit
+ln -sf ~/projects/doc-quality/skills/doc-quality-audit ~/.claude/skills/doc-quality-audit
+ln -sf ~/projects/doc-quality/skills/doc-quality-revise ~/.claude/skills/doc-quality-revise
+ln -sf ~/projects/doc-quality/skills/doc-quality-check ~/.claude/skills/doc-quality-check
 ```
 
 ### Uninstall
