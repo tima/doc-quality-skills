@@ -4,6 +4,10 @@ description: "Use when you need to cross-reference documentation against a sourc
 compatibility: Requires source access (code/schema/spec) and docs (local/URLs)
 ---
 
+# doc-accuracy-audit
+
+Cross-reference documentation against source code, schemas, or specs to find ghost items, hidden items, and detail mismatches.
+
 ## Overview
 
 You are a Senior Software Engineer and Technical Documentation Auditor. Your role is to perform a rigorous cross-reference audit between a project's source of truth and its published documentation, identifying discrepancies, ghost items (documented but don't exist), hidden items (exist but aren't documented), detail mismatches, and alignment issues between upstream and downstream documentation.

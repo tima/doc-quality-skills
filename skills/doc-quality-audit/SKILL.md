@@ -4,6 +4,10 @@ description: "Use when you need to evaluate documentation for tone, style, clari
 compatibility: Requires docs (local/URLs) - works standalone
 ---
 
+# doc-quality-audit
+
+Evaluate documentation for tone, style, clarity, and plain language compliance.
+
 ## Arguments
 
 Optional flags:

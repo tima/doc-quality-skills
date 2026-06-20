@@ -4,6 +4,10 @@ description: "Use when you have an audit report and want to apply corrections â€
 compatibility: Requires audit reports - works with/without git
 ---
 
+# doc-quality-revise
+
+Apply audit corrections â€” auto-revise simple issues, guide interactive review for complex changes.
+
 ## Arguments
 
 Optional flags:
